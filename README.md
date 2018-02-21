@@ -1,4 +1,5 @@
 [ProjetGit]
-On stockeras ci-dessous les notes et mise à jour.
-22/12/2017: Création
+On stockeras ci-dessous les notes et mise ï¿½ jour.
+22/12/2017: Crï¿½ation
 22/12/2017: Pull2 for Maxence
+21/02/2018: Pull3 for Aymeric
