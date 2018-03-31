@@ -1,31 +1,4 @@
-<<<<<<< HEAD
 @import "vars.scss";
-=======
-@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
-$font_classy: 'Playfair Display', serif;
-@import url('https://fonts.googleapis.com/css?family=Quattrocento+Sans');
-$font_title: 'Quattrocento Sans', sans-serif;
-@import url('https://fonts.googleapis.com/css?family=Alegreya+Sans');
-$font_basic: 'Alegreya Sans', sans-serif;
-
-// COLORS
-$grey: #34495e;
-$blue: #3498db;
-$lightblue: #03A9F4;
-$white: #ecf0f1;
-$orange: #FF8A65;
-
-
-* {
-    margin: 0;
-    padding: 0;
-    text-decoration: none;
-    font-size: 16px;
-    font-family: sans-serif;
-    color: black;
-    scroll-behavior: smooth;
-}
->>>>>>> refs/remotes/origin/master
 
 header {
     width: 90%;
@@ -288,11 +261,7 @@ main {
     }
 }
 
-<<<<<<< HEAD
 #footer {
-=======
-footer {
->>>>>>> refs/remotes/origin/master
     width: 90%;
     height: auto;
     padding: 15px 5%;
