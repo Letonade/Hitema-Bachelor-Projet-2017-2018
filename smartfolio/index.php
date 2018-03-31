@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 include 'bo/assets/inc/parameters.php';
 include 'assets/php/db_con.php';
@@ -27,6 +28,8 @@ if (isset($_GET['valid']) && isset($_GET['token'])) {
 }
 
 ?>
+=======
+>>>>>>> refs/remotes/origin/master
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,7 +82,10 @@ if (isset($_GET['valid']) && isset($_GET['token'])) {
         <div class="screen" id="contact">
             <form action="index.php" method="post">
                 <h1>Contact us</h1>
+<<<<<<< HEAD
                 <?php App::DisplayMessages(); ?>
+=======
+>>>>>>> refs/remotes/origin/master
                 <label for="name">Name:</label>
                 <input type="text" name="name" required value="<?php echo $_POST['name'] ?? ''; ?>">
                 <label for="email">Email:</label>
@@ -90,14 +96,22 @@ if (isset($_GET['valid']) && isset($_GET['token'])) {
             </form>
         </div>
     </main>
+<<<<<<< HEAD
     <footer id="footer">
+=======
+    <footer>
+>>>>>>> refs/remotes/origin/master
         <nav>
             <a href="#">Lorem</a>
             <a href="#">ipsum</a>
             <a href="#">dolor</a>
         </nav>
         <p><i class="far fa-copyright"></i> General Trading Services</p>
+<<<<<<< HEAD
         <form action="index.php#footer" method="post">
+=======
+        <form action="index.php" method="post">
+>>>>>>> refs/remotes/origin/master
             <label for="username">Username</label>
             <input type="text" name="username" required>
             <label for="password">Password</label>
