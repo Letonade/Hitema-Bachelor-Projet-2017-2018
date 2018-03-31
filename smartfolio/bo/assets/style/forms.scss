@@ -1,0 +1,56 @@
+@import "../../../assets/style/vars.scss";
+
+.form_new {
+    width: 80%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    border-top: 1px solid $grey;
+    padding-top: 10px;
+
+    > * {
+        width: 100%;
+    }
+
+    hr {
+        color: $grey;
+    }
+
+    h3 {
+        font-family: $font_title;
+        font-size: 1.4rem;
+        text-align: center;
+    }
+
+    input, select {
+        box-sizing: border-box;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:not([type=submit]) {
+            margin-bottom: 10px;
+            border: 1px solid $grey;
+            padding: 2px 4px;
+
+            &:focus {
+                border-color: $lightblue;
+            }
+        }
+
+        &[type=submit] {
+            border: 2px solid $blue;
+            padding: 2px 0;
+            color: $blue;
+            background: white;
+            cursor: pointer;
+            @include trs(0.2s);
+
+            &:hover {
+                color: white;
+                background: $blue;
+            }
+        }
+    }
+}
