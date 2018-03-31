@@ -1,0 +1,80 @@
+@import "../../../assets/style/vars.scss";
+
+.table_list {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+
+    tr {
+
+        &:nth-of-type(2n+1) {
+            background: lightgrey;
+
+            td:not(:last-child) {
+                border-right: 1px solid $grey;
+            }
+        }
+
+        th {
+            padding: 5px 0;
+            background: $blue;
+            color: $white;
+        }
+
+        td {
+            padding: 5px 4px;
+
+            &:not(:last-child) {
+                border-right: 1px solid lightgrey;
+            }
+
+            &.act {
+                padding: 0;
+
+                a {
+                    display: block;
+                    text-align: center;
+                    color: $blue;
+                    @include trs(0.1s);
+                }
+
+                &.act-pos:hover {
+                    background: lightgreen;
+
+                    &:active {
+                        background: forestgreen;
+
+                        a {
+                            color: lightgreen;
+                        }
+                    }
+
+                    a {
+                        color: forestgreen;
+                    }
+                }
+
+                &.act-neg:hover {
+                    background: tomato;
+
+                    &:active {
+                        background: brown;
+
+                        a {
+                            color: tomato;
+                        }
+                    }
+
+                    a {
+                        color: brown;
+                    }
+                }
+            }
+
+            a[href^=mailto] {
+                color: $grey;
+                text-decoration: underline;
+            }
+        }
+    }
+}

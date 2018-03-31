@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
+$font_classy: 'Playfair Display', serif;
+@import url('https://fonts.googleapis.com/css?family=Quattrocento+Sans');
+$font_title: 'Quattrocento Sans', sans-serif;
+@import url('https://fonts.googleapis.com/css?family=Alegreya+Sans');
+$font_basic: 'Alegreya Sans', sans-serif;
+
+// COLORS
+$grey: #34495e;
+$blue: #3498db;
+$lightblue: #03A9F4;
+$white: #ecf0f1;
+$orange: #FF8A65;
+
+// UNIVERSAL STYLING
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    font-size: 16px;
+    font-family: sans-serif;
+    scroll-behavior: smooth;
+}
+
+@mixin trs($time) {
+    transition: color $time ease-in-out, background $time ease-in-out, border $time ease-in-out;
+}

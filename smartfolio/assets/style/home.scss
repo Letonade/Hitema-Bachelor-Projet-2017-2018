@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+@import "vars.scss";
+=======
 @import url('https://fonts.googleapis.com/css?family=Playfair+Display');
 $font_classy: 'Playfair Display', serif;
 @import url('https://fonts.googleapis.com/css?family=Quattrocento+Sans');
@@ -22,6 +25,7 @@ $orange: #FF8A65;
     color: black;
     scroll-behavior: smooth;
 }
+>>>>>>> refs/remotes/origin/master
 
 header {
     width: 90%;
@@ -284,7 +288,11 @@ main {
     }
 }
 
+<<<<<<< HEAD
+#footer {
+=======
 footer {
+>>>>>>> refs/remotes/origin/master
     width: 90%;
     height: auto;
     padding: 15px 5%;
