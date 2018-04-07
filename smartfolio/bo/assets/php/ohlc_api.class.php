@@ -39,7 +39,10 @@ class OHLC_API
                     self::$API_allowance = $API_resp['allowance']['remaining'];
 
                     if (isset($API_resp['result'][1800]) && !empty($API_resp['result'][1800])) {
-                        foreach ($API_resp['result'][1800] as $candlestick) {
+                        // foreach ($API_resp['result'][1800] as $candlestick) {
+                        for ($i = 0; $i < (count($API_resp['result'][1800]) - 1); $i += 1) {
+                            $candlestick = $API_resp['result'][1800][$i];
+
                             // Don't insert duplicate data
                             $check_dup = App::$db->prepare("SELECT COUNT(*) FROM ohlc WHERE ohlc_pair_id = :pair_id AND ohlc_timestamp = :stamp");
                             $check_dup->execute(array(

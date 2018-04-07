@@ -5,6 +5,8 @@ include '../../../assets/php/app.class.php';
 
 App::SetDB($db);
 
+include '../php/currency.class.php';
+include '../php/exchange.class.php';
 include '../php/pair.class.php';
 include '../php/ohlc_api.class.php';
 
