@@ -51,6 +51,7 @@ class Customer
             "email"     => $infos['cust_email'],
             "id"        => $this->infos['id']
         ));
+        $this->__construct($this->infos['id']);
         return $save_cust ? array(true) : array(false, 'erreur');
     }
 

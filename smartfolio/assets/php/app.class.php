@@ -48,6 +48,21 @@ class App
         return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '_', $string)));
     }
 
+    // SET LINK ATTRIBUTES
+    static public function SetLink(string $url, bool $target = false)
+    {
+        $attrs = 'href="' . $url . '"';
+        $url_parts = explode('/', $_SERVER['REQUEST_URI']);
+        // if (end($url_parts) == $url) {
+        if (strpos(end($url_parts), $url) !== false) {
+            $attrs .= ' class="selected"';
+        }
+        if ($target == true) {
+            $attrs .= ' target="_blank"';
+        }
+        echo $attrs;
+    }
+
     // SENDS A TEXT MAIL
     public function TextMail($address, $subject, $content)
     {

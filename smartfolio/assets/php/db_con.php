@@ -10,8 +10,8 @@ $options = [
     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
 ];
 try {
-    $db = new PDO('' . $sgbd . ':host=' . $host . ';dbname=' . $database . ';',
-    '' . $user . '', '' . $password . '', $options);
+    $db = new PDO('' . DB_SGBD . ':host=' . DB_HOST . ';dbname=' . DB_DATABASE . ';',
+    '' . DB_USER . '', '' . DB_PASSWORD . '', $options);
     global $db;
     // $DB->setAttribute(PDO::ATTR_EMULATE_PREPARES,TRUE);
 } catch (Exception $e) {

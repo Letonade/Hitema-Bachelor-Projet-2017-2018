@@ -57,6 +57,18 @@
                             Profil
                         </a>
                     </li>
+                    <?php
+                    if (User::AmIManager()) {
+                        ?>
+                        <li>
+                            <a href="setup.php">
+                                <i class="fas fa-cog"></i>
+                                Paramètres
+                            </a>
+                        </li>
+                        <?php
+                    }
+                    ?>
                     <li>
                         <a href="../?logout">
                             <i class="fas fa-sign-out-alt"></i>
