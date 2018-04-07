@@ -34,14 +34,14 @@ class Currency
             return array(false, 'champ(s) vide(s)');
         }
         // Check if already exists
-        if (self::CheckDuplicate($infos['curr_name'], $infos['curr_symbol'], $this->infos['id'])) {
+        if (!self::CheckDuplicate($infos['curr_name'], $infos['curr_symbol'], $this->infos['id'])) {
             return array(false, 'monnaie déjà existante');
         }
         // Update
         $upd_currency = App::$db->prepare("UPDATE currency SET curr_name = :name, curr_symbol = :symbol WHERE curr_id = :id");
         $upd_currency->execute(array(
-            "name"   => trim($infos['name']),
-            "symbol" => strtoupper(trim($infos['symbol'])),
+            "name"   => trim($infos['curr_name']),
+            "symbol" => strtoupper(trim($infos['curr_symbol'])),
             "id"     => $this->infos['id']
         ));
         $this->__construct($this->infos['id']);
@@ -76,14 +76,14 @@ class Currency
             return array(false, 'champ(s) vide(s)');
         }
         // Check if already exists
-        if (self::CheckDuplicate($infos['curr_name'], $infos['curr_symbol'])) {
+        if (!self::CheckDuplicate($infos['curr_name'], $infos['curr_symbol'])) {
             return array(false, 'monnaie déjà existante');
         }
         // Save
         $new_currency = App::$db->prepare("INSERT INTO currency (curr_name, curr_symbol) VALUES (:name, :symbol)");
         $new_currency->execute(array(
-            "name"   => trim($infos['name']),
-            "symbol" => strtoupper(trim($infos['symbol']))
+            "name"   => trim($infos['curr_name']),
+            "symbol" => strtoupper(trim($infos['curr_symbol']))
         ));
         return $new_currency ? array(true) : array(false, 'erreur');
     }

@@ -33,13 +33,13 @@ class Exchange
             return array(false, 'champ(s) vide(s)');
         }
         // Check if already exists
-        if (self::CheckDuplicate($infos['exchange_name'], $this->infos['id'])) {
+        if (!self::CheckDuplicate($infos['exchange_name'], $this->infos['id'])) {
             return array(false, 'échange déjà existant');
         }
         // Update
         $upd_exchange = App::$db->prepare("UPDATE exchange SET exchange_name = :name WHERE exchange_id = :id");
         $upd_exchange->execute(array(
-            "name" => trim($infos['name']),
+            "name" => trim($infos['exchange_name']),
             "id"   => $this->infos['id']
         ));
         $this->__construct($this->infos['id']);
@@ -74,13 +74,13 @@ class Exchange
             return array(false, 'champ(s) vide(s)');
         }
         // Check if already exists
-        if (self::CheckDuplicate($infos['exchange_name'])) {
+        if (!self::CheckDuplicate($infos['exchange_name'])) {
             return array(false, 'échange déjà existant');
         }
         // Save
         $new_exchange = App::$db->prepare("INSERT INTO exchange (exchange_name) VALUES (:name)");
         $new_exchange->execute(array(
-            "name"   => trim($infos['name'])
+            "name"   => trim($infos['exchange_name'])
         ));
         return $new_exchange ? array(true) : array(false, 'erreur');
     }

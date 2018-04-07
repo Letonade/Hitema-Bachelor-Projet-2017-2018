@@ -48,7 +48,7 @@ class Pair
             return array(false, 'champ(s) vide(s)');
         }
         // Check if already exists
-        if (self::CheckDuplicate($infos['pair_curr_a'], $infos['pair_curr_b'], $infos['pair_exchange_id'], $this->infos['id'])) {
+        if (!self::CheckDuplicate($infos['pair_curr_a'], $infos['pair_curr_b'], $infos['pair_exchange_id'], $this->infos['id'])) {
             return array(false, 'paire déjà existante');
         }
         // Update
@@ -147,7 +147,7 @@ class Pair
             return array(false, 'champ(s) vide(s)');
         }
         // Check if already exists
-        if (self::CheckDuplicate($infos['pair_curr_a'], $infos['pair_curr_b'], $infos['pair_exchange_id'])) {
+        if (!self::CheckDuplicate($infos['pair_curr_a'], $infos['pair_curr_b'], $infos['pair_exchange_id'])) {
             return array(false, 'paire déjà existante');
         }
         // Save
