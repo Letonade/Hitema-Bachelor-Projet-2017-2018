@@ -164,7 +164,7 @@ class User
         $content .= '<b>Mot de passe:</b> ' . $password . '<br>';
         $content .= '</p>';
         $content .= '<hr><h6>Ceci est un email automatique, merci de ne pas y répondre</h6>';
-        return App::TextMail($email, 'subject', $content) ? array(true) : array(false, 'erreur lors de l\'envoi du mail d\'activation');
+        return App::TextMail($email, 'Smartfolio - Bienvenue !', $content) ? array(true) : array(false, 'erreur lors de l\'envoi du mail d\'activation');
     }
 
     // EDIT USER
@@ -191,6 +191,28 @@ class User
             "id"        => $_SESSION['user']['id']
         ));
         return $save_user ? array(true) : array(false, 'erreur');
+    }
+
+    // CONFIRM USER ACCOUNT
+    static public function ConfirmAccount($email, $token)
+    {
+        $user = App::$db->prepare("SELECT * FROM user WHERE user_email = :email");
+        $user->execute(array(
+            "email" => $email
+        ));
+        if ($user->rowCount() != 1) {
+            return array(false, 'adresse email introuvable');
+        }
+        $user = $user->fetch(PDO::FETCH_ASSOC);
+        if (password_verify($token, $user['user_token'])) {
+            $edit_user = App::$db->prepare("UPDATE user SET user_token = :token, user_activated_account = TRUE WHERE user_id = :id");
+            $edit_user->execute(array(
+                "token" => password_hash(self::GenerateToken(), PASSWORD_DEFAULT),
+                "id"    => $user['user_id']
+            ));
+            return $edit_user ? array(true) : array(false, 'erreur lors de la validation');
+        }
+        return array(false, 'jeton de sécurité invalide');
     }
 
     // // VALIDE UN MOT DE PASSE

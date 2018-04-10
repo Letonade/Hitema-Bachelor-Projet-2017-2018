@@ -10,7 +10,7 @@
             <li>
                 <a href="index.php">
                     <i class="far fa-list-alt"></i>
-                    Portfolios
+                    Portefeuilles
                 </a>
             </li>
             <?php
@@ -39,7 +39,7 @@
                 <li>
                     <a href="nv_port.php">
                         <i class="fas fa-plus-circle"></i>
-                        Nouveau portfolio
+                        Nouveau portefeuille
                     </a>
                 </li>
                 <?php

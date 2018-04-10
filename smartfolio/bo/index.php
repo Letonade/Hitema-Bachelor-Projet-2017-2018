@@ -17,7 +17,7 @@ include 'assets/inc/init.php';
 
     // PORTFOLIO LIST
     foreach (Portfolio::UserOpenList() as $port) {
-        App::Debug($port);
+        echo '<a href="portfolio.php?port=' . $port->infos['id'] . '">' . $port->customer->infos['name'] . '</a>';
     }
     ?>
 </body>

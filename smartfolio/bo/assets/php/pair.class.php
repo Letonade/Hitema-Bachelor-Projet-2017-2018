@@ -31,12 +31,12 @@ class Pair
                 "exchange" => $infos['pair_exchange_id'],
                 "api_url"  => $infos['pair_api_url']
             );
-            $this->FullName();
-            $this->LastCandlestick();
-            $this->FirstCandlestick();
             $this->currency = new Currency($this->infos['curr_a']);
             $this->index    = new Currency($this->infos['curr_b']);
             $this->exchange = new Exchange($this->infos['exchange']);
+            $this->FullName();
+            $this->LastCandlestick();
+            $this->FirstCandlestick();
         }
     }
 
@@ -89,22 +89,10 @@ class Pair
     // GET THE FULL PAIR NAME SYMBOL
     private function FullName()
     {
-        $curr_a = App::$db->prepare("SELECT curr_symbol FROM currency WHERE curr_id = :curr");
-        $curr_a->execute(array(
-            "curr" => $this->infos['curr_a']
-        ));
-        $curr_a = $curr_a->fetch(PDO::FETCH_ASSOC)['curr_symbol'];
-        $curr_b = App::$db->prepare("SELECT curr_symbol FROM currency WHERE curr_id = :curr");
-        $curr_b->execute(array(
-            "curr" => $this->infos['curr_b']
-        ));
-        $curr_b = $curr_b->fetch(PDO::FETCH_ASSOC)['curr_symbol'];
-        $exchange = App::$db->prepare("SELECT exchange_name FROM exchange WHERE exchange_id = :exchange");
-        $exchange->execute(array(
-            "exchange" => $this->infos['exchange']
-        ));
-        $exchange = $exchange->fetch(PDO::FETCH_ASSOC)['exchange_name'];
-        $this->symbol = $curr_a . '/' . $curr_b . ':' . strtoupper($exchange);
+        $currency     = $this->currency->infos['symbol'];
+        $index        = $this->index->infos['symbol'];
+        $exchange     = strtoupper($this->exchange->infos['name']);
+        $this->symbol = $currency . '/' . $index . ':' . $exchange;
     }
 
     // GET LAST CANDLESTICK TIMESTAMP
@@ -137,6 +125,16 @@ class Pair
                 $this->first_update = $first_candlestick->fetch(PDO::FETCH_ASSOC)['ohlc_timestamp'];
             }
         }
+    }
+
+    // GET LAST OHLC DATA
+    public function GetChartData()
+    {
+        $candlesticks = App::$db->prepare("SELECT * FROM ohlc WHERE ohlc_pair_id = :pair_id ORDER BY ohlc_timestamp DESC LIMIT 0, 300");
+        $candlesticks->execute(array(
+            "pair_id" => $this->infos['id']
+        ));
+        return $candlesticks->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // CREATE EXCHANGE

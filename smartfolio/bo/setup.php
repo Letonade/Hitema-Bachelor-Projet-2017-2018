@@ -409,6 +409,7 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
                         <th>Données</th>
                         <th>URL de l'API</th>
                         <th></th>
+                        <th></th>
                     </tr>
                     <?php
                     foreach ((isset($_GET['search']) ? Pair::Search($_GET['search']) : Pair::FullList()) as $pair) {
@@ -427,6 +428,7 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
                             }
                             ?></td>
                             <td><a href="<?php echo $pair->infos['api_url']; ?>" target="_blank"><?php echo $pair->infos['api_url']; ?></a></td>
+                            <td class="act act-pos"><a href="chart.php?pair=<?php echo $pair->infos['id']; ?>" target="_blank"><i class="far fa-chart-bar"></i> Graphique</a></td>
                             <td class="act act-pos"><a href="?pair&edit=<?php echo $pair->infos['id']; ?>"><i class="far fa-edit"></i></a></td>
                         </tr>
                         <?php
