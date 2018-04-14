@@ -147,6 +147,33 @@ class Currency
         $currencies_list = App::$db->query("SELECT curr_id FROM currency ORDER BY curr_symbol");
         return self::ReturnObjectsArray($currencies_list);
     }
+
+    // PORTFOLIO: GET ACCUMULATORS LIST
+    static public function GetAccumulators(Portfolio $port)
+    {
+        $accumulators = App::$db->prepare("SELECT acc_curr_id AS curr_id FROM port_accumulator WHERE acc_port_id = :id");
+        $accumulators->execute(array(
+            "id" => $port->infos['id']
+        ));
+        return Currency::ReturnObjectsArray($accumulators);
+    }
+
+    // TRANSACTION: GET WITH STRINGS
+    static public function GetByTitle(array $infos)
+    {
+        $curr_id = App::$db->prepare("SELECT curr_id FROM currency WHERE curr_name = :name AND curr_symbol = :symbol");
+        $curr_id->execute(array(
+            "name"   => $infos['name'],
+            "symbol" => $infos['symbol']
+        ));
+        $curr_id = $curr_id->fetch(PDO::FETCH_ASSOC);
+        try {
+            $currency = new Currency($curr_id['curr_id']);
+            return $currency;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
 
 

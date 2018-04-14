@@ -7,6 +7,7 @@ class App
 {
     static public $response;
     static public $db;
+    static private $exitOnMessages = false;
 
     static public function SetDB($db)
     {
@@ -19,7 +20,7 @@ class App
     }
 
     // RESPOND TO AN ACTION
-    static public function Respond($action, $error = false)
+    static public function Respond($action, $error = false, $die = false)
     {
         if (!isset($action) || empty($action)) {
             throw new Exception("Error with __METHOD__ : missing argument", 1);
@@ -27,6 +28,9 @@ class App
             self::$response .= '<p class="' . ($error ? 'error' : 'success') . '"><i class="' . ($error ? 'fas fa-exclamation-circle' : 'far fa-check-circle') . '"></i> ';
             self::$response .= $action . ' : ' . ($error ?: 'ok !');
             self::$response .= '</p>';
+        }
+        if ($die) {
+            self::$exitOnMessages = true;
         }
     }
 
@@ -40,6 +44,9 @@ class App
     static public function DisplayMessages()
     {
         echo empty(self::$response) ? '' : '<div id="response">' . self::$response . '</div>';
+        if (self::$exitOnMessages === true) {
+            die();
+        }
     }
 
     // RETURNS A SLUG

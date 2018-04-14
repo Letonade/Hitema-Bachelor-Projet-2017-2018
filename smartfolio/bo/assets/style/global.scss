@@ -37,9 +37,9 @@
                     }
                 }
 
-                > a:hover {
+                > a:hover, a.selected {
                     background: $orange;
-                    color: $grey;
+                    color: white;
                 }
 
                 a {

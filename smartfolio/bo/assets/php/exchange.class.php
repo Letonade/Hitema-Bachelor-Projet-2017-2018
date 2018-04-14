@@ -141,6 +141,21 @@ class Exchange
         $exchange = App::$db->query("SELECT exchange_id FROM exchange ORDER BY exchange_name");
         return self::ReturnObjectsArray($exchange);
     }
+
+    static public function GetByTitle(array $infos)
+    {
+        $exchange_id = App::$db->prepare("SELECT exchange_id FROM exchange WHERE exchange_name = :name");
+        $exchange_id->execute(array(
+            "name"   => $infos['name']
+        ));
+        $exchange_id = $exchange_id->fetch(PDO::FETCH_ASSOC)['exchange_id'];
+        try {
+            $exchange = new Currency($exchange_id);
+            return $exchange;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
 
 

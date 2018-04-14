@@ -61,9 +61,13 @@ class User
     // VALIDATE TOKEN
     public function CheckToken($token)
     {
-        return isset($_SESSION['user']['session_token'])
+        $check = isset($_SESSION['user']['session_token'])
         ? $token == $_SESSION['user']['session_token']
         : false;
+        if (!$check) {
+            App::Respond('Jeton de sécurité', 'incorrect');
+        }
+        return $check;
     }
 
     // CHECK IF USER IS MANAGER

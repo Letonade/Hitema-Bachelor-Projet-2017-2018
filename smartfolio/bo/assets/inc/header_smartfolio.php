@@ -8,7 +8,7 @@
                 </a>
             </li>
             <li>
-                <a href="index.php">
+                <a <?php App::SetLink('index.php'); ?>>
                     <i class="far fa-list-alt"></i>
                     Portefeuilles
                 </a>
@@ -23,13 +23,13 @@
                     </a>
                     <ul class="submenu">
                         <li>
-                            <a href="agents.php">
+                            <a <?php App::SetLink('agents.php'); ?>>
                                 <i class="fas fa-users"></i>
                                 Agents
                             </a>
                         </li>
                         <li>
-                            <a href="clients.php">
+                            <a <?php App::SetLink('clients.php'); ?>>
                                 <i class="far fa-address-book"></i>
                                 Clients
                             </a>
@@ -37,7 +37,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="nv_port.php">
+                    <a <?php App::SetLink('nv_port.php'); ?>>
                         <i class="fas fa-plus-circle"></i>
                         Nouveau portefeuille
                     </a>
@@ -52,7 +52,7 @@
                 </a>
                 <ul class="submenu">
                     <li>
-                        <a href="profil.php">
+                        <a <?php App::SetLink('profil.php'); ?>>
                             <i class="far fa-user"></i>
                             Profil
                         </a>
@@ -61,7 +61,7 @@
                     if (User::AmIManager()) {
                         ?>
                         <li>
-                            <a href="setup.php">
+                            <a <?php App::SetLink('setup.php?pair'); ?>>
                                 <i class="fas fa-cog"></i>
                                 Paramètres
                             </a>

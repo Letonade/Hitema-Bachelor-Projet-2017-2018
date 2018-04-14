@@ -261,6 +261,24 @@ class Pair
         ));
         return self::ReturnObjectsArray($pairs);
     }
+
+    // TRANSACTION : GET BY STRINGS
+    static public function GetByTitle(array $infos)
+    {
+        $pair_id = App::$db->prepare("SELECT pair_id FROM pair LEFT JOIN currency AS a ON pair.pair_curr_a = a.curr_id LEFT JOIN currency AS b ON pair.pair_curr_b = b.curr_id LEFT JOIN exchange ON pair.pair_exchange_id = exchange.exchange_id WHERE a.curr_symbol = :currency AND b.curr_symbol = :index AND exchange.exchange_name = :exchange");
+        $pair_id->execute(array(
+            "currency" => $infos['currency'],
+            "index"    => $infos['index'],
+            "exchange" => $infos['exchange']
+        ));
+        $pair_id = $pair_id->fetch(PDO::FETCH_ASSOC);
+        try {
+            $pair = new Pair($pair_id['pair_id']);
+            return $pair;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
 
 
