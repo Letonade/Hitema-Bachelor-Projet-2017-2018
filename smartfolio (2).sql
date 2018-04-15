@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le :  mar. 10 avr. 2018 à 16:30
+-- Généré le :  Dim 15 avr. 2018 à 18:14
 -- Version du serveur :  10.1.30-MariaDB
 -- Version de PHP :  7.2.1
 
@@ -107,6 +107,18 @@ CREATE TABLE `portfolio` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `port_accumulator`
+--
+
+CREATE TABLE `port_accumulator` (
+  `acc_id` int(8) NOT NULL,
+  `acc_port_id` int(8) NOT NULL,
+  `acc_curr_id` int(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `transaction`
 --
 
@@ -183,6 +195,12 @@ ALTER TABLE `portfolio`
   ADD PRIMARY KEY (`port_id`);
 
 --
+-- Index pour la table `port_accumulator`
+--
+ALTER TABLE `port_accumulator`
+  ADD PRIMARY KEY (`acc_id`);
+
+--
 -- Index pour la table `transaction`
 --
 ALTER TABLE `transaction`
@@ -235,10 +253,16 @@ ALTER TABLE `portfolio`
   MODIFY `port_id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT pour la table `port_accumulator`
+--
+ALTER TABLE `port_accumulator`
+  MODIFY `acc_id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT pour la table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `tx_id` int(24) NOT NULL AUTO_INCREMENT;
+  MODIFY `tx_id` int(24) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT pour la table `user`
