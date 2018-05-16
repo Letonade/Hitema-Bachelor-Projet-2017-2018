@@ -1,0 +1,216 @@
+@import "../../../assets/style/vars.scss";
+
+// COLORS
+$bg: rgba(255, 255, 255, 0.1);
+$text: white;
+$up: rgb(104, 205, 63);
+$down: rgb(252, 49, 49);
+$neutral: rgb(200, 200, 200);
+$macd_1: rgb(76, 142, 219);
+$macd_2: rgb(184, 199, 255);
+$macd_3: rgb(255, 130, 77);
+
+#chart {
+    width: 100%;
+    height: calc(100vh - 40px);
+    display: block;
+    background: $bg;
+    box-sizing: border-box;
+
+    text {
+        fill: $text;
+        font-size: 12px;
+
+        &.symbol {
+            font-size: 15px;
+            fill: #BBBBBB;
+        }
+    }
+
+    path {
+        fill: none;
+        stroke-width: 1;
+
+        &.candle {
+            stroke: $neutral;
+
+            &.body {
+                stroke-width: 0;
+            }
+
+            &.up {
+                fill: $up;
+                stroke: darken($up, 10);
+            }
+
+            &.down {
+                fill: $down;
+                stroke: darken($down, 10);
+            }
+        }
+
+        &.volume {
+            fill: $neutral;
+        }
+
+        &.macd {
+            stroke: $macd_1;
+        }
+
+        &.signal {
+            stroke: $macd_2;
+        }
+
+        &.zero {
+            stroke: $neutral;
+            stroke-dasharray: 0;
+            stroke-opacity: 0.5;
+        }
+
+        &.difference {
+            fill: $neutral;
+            opacity: 0.5;
+        }
+
+        &.rsi {
+            stroke: $up;
+        }
+
+        &.overbought, &.oversold {
+            stroke: $down;
+            stroke-dasharray: 5, 5;
+        }
+
+        &.middle, &.zero {
+            stroke: $neutral;
+            stroke-dasharray: 5, 5;
+        }
+
+        &.domain {
+            stroke: $neutral;
+        }
+    }
+
+    .tick line {
+        stroke: $neutral;
+    }
+
+    .close.annotation.up path {
+        fill: $blue;
+    }
+
+    .indicator-plot path.line {
+        fill: none;
+        stroke-width: 1;
+    }
+
+    .ma-0 path.line {
+        stroke: $macd_1;
+    }
+
+    .ma-1 path.line {
+        stroke: $macd_2;
+    }
+
+    .ma-2 path.line {
+        stroke: $macd_3;
+    }
+
+    button {
+        position: absolute;
+        right: 110px;
+        top: 25px;
+    }
+
+    .analysis path, .analysis circle {
+        stroke: blue;
+        stroke-width: 0.8;
+    }
+
+    .trendline circle {
+        stroke-width: 0;
+        display: none;
+    }
+
+    .mouseover .trendline path {
+        stroke-width: 1.2;
+    }
+
+    .mouseover .trendline circle {
+        stroke-width: 1;
+        display: inline;
+    }
+
+    .dragging .trendline path, .dragging .trendline circle {
+        stroke: darkblue;
+    }
+
+    .interaction path, .interaction circle {
+        pointer-events: all;
+    }
+
+    .interaction .body {
+        cursor: move;
+    }
+
+    .trendlines .interaction .start, .trendlines .interaction .end {
+        cursor: nwse-resize;
+    }
+
+    .supstance path {
+        stroke-dasharray: 2, 2;
+    }
+
+    .supstances .interaction path {
+        pointer-events: all;
+        cursor: ns-resize;
+    }
+
+    .mouseover .supstance path {
+        stroke-width: 1.5;
+    }
+
+    .dragging .supstance path {
+        stroke: darkblue;
+    }
+
+    .crosshair {
+        cursor: crosshair;
+
+        path.wire {
+            stroke: $blue;
+            stroke-dasharray: 1, 1;
+        }
+
+        .axisannotation path {
+            fill: $blue;
+        }
+    }
+
+    .tradearrow path.tradearrow {
+        stroke: none;
+    }
+
+    .tradearrow path.buy {
+        fill: saturate(lighten($up, 10), 50);
+        stroke: $neutral;
+    }
+
+    .tradearrow path.sell {
+        fill: saturate(lighten($down, 10), 50);
+        stroke: $neutral;
+    }
+
+    .tradearrow path.highlight {
+        fill: none;
+        stroke-width: 2;
+    }
+
+    .tradearrow path.highlight.buy {
+        stroke: darken($up, 20);
+    }
+
+    .tradearrow path.highlight.sell {
+        stroke: darken($down, 20);
+    }
+}

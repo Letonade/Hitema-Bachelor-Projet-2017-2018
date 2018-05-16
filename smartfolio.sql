@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le :  Dim 15 avr. 2018 à 18:14
+-- Généré le :  mar. 15 mai 2018 à 14:41
 -- Version du serveur :  10.1.30-MariaDB
 -- Version de PHP :  7.2.1
 
@@ -262,7 +262,7 @@ ALTER TABLE `port_accumulator`
 -- AUTO_INCREMENT pour la table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `tx_id` int(24) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `tx_id` int(24) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT pour la table `user`

@@ -75,7 +75,7 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
         // App::Debug($_POST);
         if (isset($_GET['add_tx'])) {
             ?>
-            <form class="form_new form_tx" action="port_settings.php?port=<?php echo $portfolio->infos['id']; ?>&add_tx" method="post">
+            <form class="form_new first_tx" action="port_settings.php?port=<?php echo $portfolio->infos['id']; ?>&add_tx" method="post">
                 <h3>Ajouter une transaction</h3>
                 <!-- SELECT TX TYPE -->
                 <label for="tx_type">Type de transaction:</label>
@@ -156,11 +156,11 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
                     <th></th>
                 </tr>
                 <?php
-                foreach ($portfolio->accumulators as $accumulator) {
+                foreach ($portfolio->GetAccumulators() as $accumulator) {
                     echo '<tr>';
-                    echo '<td>' . $accumulator->infos['symbol'] . '</td>';
-                    echo '<td>' . $accumulator->infos['name'] . '</td>';
-                    echo '<td><a href="port_settings.php?port=' . $portfolio->infos['id'] . '&del_acc=' . $accumulator->infos['id'] . '&token=' . $_SESSION['user']['session_token'] . '"><i class="far fa-trash-alt"></i></a></td>';
+                    echo '<td>' . $accumulator->currency->infos['symbol'] . '</td>';
+                    echo '<td>' . $accumulator->currency->infos['name'] . '</td>';
+                    echo '<td><a href="port_settings.php?port=' . $portfolio->infos['id'] . '&del_acc=' . $accumulator->currency->infos['id'] . '&token=' . $_SESSION['user']['session_token'] . '"><i class="far fa-trash-alt"></i></a></td>';
                     echo '</tr>';
                 }
                 ?>

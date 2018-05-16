@@ -20,7 +20,7 @@ class Pair
             "id" => $id
         ));
         if ($infos->rowCount() == 0) {
-            throw new \Exception("introuvable", 1);
+            throw new \Exception("paire introuvable", 1);
 
         } else {
             $infos = $infos->fetch(PDO::FETCH_ASSOC);
@@ -274,6 +274,17 @@ class Pair
         $pair_id = $pair_id->fetch(PDO::FETCH_ASSOC);
         try {
             $pair = new Pair($pair_id['pair_id']);
+            return $pair;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    // TRANSACTION : GET BY ID
+    static public function GetById($pair_id)
+    {
+        try {
+            $pair = new Pair($pair_id);
             return $pair;
         } catch (\Exception $e) {
             return false;

@@ -28,18 +28,25 @@ class Portfolio
             );
             $this->customer = new Customer($infos['port_cust_id']);
             $this->agent    = new Agent($infos['port_agent_id']);
-            $this->GetInvestments();
-            $this->GetAccumulators();
         }
     }
 
-    // GET PORTFOLIO ACCUMULATORS
-    private function GetAccumulators()
+    // GET ACCUMULATORS INVESTMENTS
+    public function GetAccumulators()
     {
-        $this->accumulators = Currency::GetAccumulators($this);
-        foreach ($this->accumulators as $acc) {
-            $this->investments[$acc->infos['id']]['type'] = 'accumulator';
-        }
+        $accumulators = array_filter(Investment::GetInvestments($this->infos['id']), function($inv) {
+            return $inv->type == 'accumulator';
+        });
+        return $accumulators;
+    }
+
+    // GET CLASSIC INVESTMENTS
+    public function GetInvestments()
+    {
+        $investments = array_filter(Investment::GetInvestments($this->infos['id']), function($inv) {
+            return $inv->type == 'investment';
+        });
+        return $investments;
     }
 
     // ADD AN ACCUMULATOR
@@ -106,84 +113,22 @@ class Portfolio
         }
     }
 
-    // GET ALL INVESTMENTS
-    private function GetInvestments()
-    {
-        $tx_list = App::$db->prepare("SELECT * FROM transaction WHERE tx_port_id = :port_id ORDER BY tx_timestamp");
-        $tx_list->execute(array(
-            "port_id" => $this->infos['id']
-        ));
-        foreach ($tx_list->fetchAll(PDO::FETCH_ASSOC) as $tx) {
-            switch ($tx['tx_type']) {
-                // DEPOSIT
-                case 'deposit':
-                if (!isset($this->investments[$tx['tx_transfer_curr_id']])) {
-                    $this->investments[$tx['tx_transfer_curr_id']] = array(
-                        'type'     => 'investment',
-                        'currency' => new Currency($tx['tx_transfer_curr_id']),
-                        'balance'  => 0
-                    );
-                }
-                // Add deposit
-                $this->investments[$tx['tx_transfer_curr_id']]['balance'] += $tx['tx_amount'];
-                break;
-
-                // BUY
-                case 'buy':
-                $pair = new Pair($tx['tx_pair_id']);
-                if (!isset($this->investments[$pair->currency->infos['id']])) {
-                    $this->investments[$pair->currency->infos['id']] = array(
-                        'type'     => 'investment',
-                        'currency' => new Currency($pair->currency->infos['id']),
-                        'balance'  => 0
-                    );
-                }
-                // Calculate total order cost w/ fees
-                $cost = floatval($tx['tx_amount'] * $tx['tx_price']);
-                $amount = $tx['tx_amount'];
-                switch ($tx['tx_fee_type']) {
-                    case 'fixed_currency':
-                    $amount -= $tx['tx_fee_amount'];
-                    break;
-
-                    case 'fixed_index':
-                    $cost += $tx['tx_fee_amount'];
-                    break;
-
-                    case 'percent_currency':
-                    $amount -= floatval(floatval($amount / 100) * $tx['tx_fee_amount']);
-                    break;
-
-                    case 'percent_index':
-                    $cost += floatval(floatval($cost / 100) * $tx['tx_fee_amount']);
-                    break;
-
-                    default:
-                    $fee_cost = 0;
-                    break;
-                }
-                // Add order
-                $this->investments[$pair->currency->infos['id']]['balance'] += $amount;
-                // If not holding leave balance to zero
-                if (!isset($this->investments[$pair->index->infos['id']])) {
-                    $this->investments[$pair->index->infos['id']] = array(
-                        'type'     => 'investment',
-                        'currency' => new Currency($pair->index->infos['id']),
-                        'balance'  => 0
-                    );
-                } elseif (floatval($this->investments[$pair->index->infos['id']]['balance']) >= floatval($total_cost)) { // Remove index holdings if enough balance
-                    $this->investments[$pair->index->infos['id']]['balance'] -= $cost;
-                }
-                break;
-            }
-        }
-    }
-
     // FIRST TRANSACTION OF PORTFOLIO/INVESTMENT
     public function FirstTx(array $infos)
     {
         if (!in_array($infos['tx_type'], array('deposit', 'buy'))) {
             return array(false, 'Mauvais type de transaction');
+        }
+        switch ($infos['tx_type']) {
+            case 'deposit':
+            preg_match_all("/\[([^\]]*)\]/", $infos['tx_transfer_curr_id'], $curr_symbol);
+            $curr_infos = array(
+                'name'   => trim(substr($infos['tx_transfer_curr_id'], (strpos($infos['tx_transfer_curr_id'], "] ") ?: -1) + 1)),
+                'symbol' => $curr_symbol[1][0] ?? ''
+            );
+            $tx_curr = Currency::GetByTitle($curr_infos);
+            $infos['tx_transfer_curr_id'] = $tx_curr->infos['id'] ?? 0;
+            break;
         }
         return $this->NewTx($infos);
     }
@@ -195,12 +140,7 @@ class Portfolio
             // DEPOSIT
             case 'deposit':
             // Get matching data
-            preg_match_all("/\[([^\]]*)\]/", $infos['tx_transfer_curr_id'], $curr_symbol);
-            $curr_infos = array(
-                'name'   => trim(substr($infos['tx_transfer_curr_id'], (strpos($infos['tx_transfer_curr_id'], "] ") ?: -1) + 1)),
-                'symbol' => $curr_symbol[1][0] ?? ''
-            );
-            $tx_curr        = Currency::GetByTitle($curr_infos);
+            $tx_curr = Currency::GetById($infos['tx_transfer_curr_id']);
             $exchange_infos = array(
                 'name' => trim($infos['tx_transfer_exchange_id_to'])
             );
@@ -208,7 +148,7 @@ class Portfolio
             $tx_datetime    = DateTime::createFromFormat('Y-m-d H:i', $infos['tx_date'] . ' ' . $infos['tx_hour']);
             $tx_timestamp   = $tx_datetime === false ? false : $tx_datetime->getTimestamp();
             // Data validation
-            $validation     = array(
+            $validation     = [
                 "aucune monnaie sélectionnée"  => empty($infos['tx_transfer_curr_id']),
                 "monnaie introuvable"          => $tx_curr === false,
                 "aucun exchange sélectionné"   => empty($infos['tx_transfer_exchange_id_to']),
@@ -217,9 +157,9 @@ class Portfolio
                 "le montant doit être positif" => floatval($infos['tx_amount']) <= 0,
                 "date/heure incorrectes"       => $tx_datetime === false,
                 "date & heure futures"         => $tx_timestamp === false ? false : $tx_timestamp > (new DateTime())->getTimestamp()
-            );
+            ];
             if (in_array(true, $validation)) {
-                return array(false, array_search(true, $validation));
+                return [false, array_search(true, $validation)];
             }
             // Save
             $new_tx = App::$db->prepare("INSERT INTO transaction (tx_port_id, tx_type, tx_transfer_curr_id, tx_transfer_exchange_id_to, tx_amount, tx_timestamp) VALUES (:tx_port_id, :tx_type, :tx_transfer_curr_id, :tx_transfer_exchange_id_to, :tx_amount, :tx_timestamp)");
@@ -234,30 +174,30 @@ class Portfolio
             return $new_tx ? array(true) : array(false, 'erreur');
             break;
 
-            // BUY
+            // BUY / SELL
             case 'buy':
+            case 'sell':
             // Get matching data
             $pair_parts = explode('/', $infos['tx_pair_id']);
             $pair_parts_2 = explode(':', $pair_parts[1] ?? '');
-            $pair_infos = array(
+            $tx_pair = Pair::GetByTitle([
                 'currency' => $pair_parts[0],
                 'index'    => $pair_parts_2[0],
-                'exchange' => ucfirst(strtolower($pair_parts_2[1])) ?? ''
-            );
-            $tx_pair      = Pair::GetByTitle($pair_infos);
+                'exchange' => ucfirst(strtolower($pair_parts_2[1] ?? ''))
+            ]);
             $tx_datetime  = DateTime::createFromFormat('Y-m-d H:i', $infos['tx_date'] . ' ' . $infos['tx_hour']);
             $tx_timestamp = $tx_datetime === false ? false : $tx_datetime->getTimestamp();
             // Data validation
             $validation   = array(
                 "aucune paire sélectionnée"                     => empty($infos['tx_pair_id']),
-                "paire introuvable"                             => $tx_curr === false,
+                "paire introuvable"                             => $tx_pair === false,
                 "montant incorrect"                             => !is_numeric($infos['tx_amount']),
                 "le montant doit être positif"                  => floatval($infos['tx_amount']) <= 0,
                 "prix incorrect"                                => !is_numeric($infos['tx_price']),
                 "le prix doit être positif"                     => floatval($infos['tx_price']) < 0,
                 "montant des frais incorrect"                   => !is_numeric($infos['tx_fee_amount']),
                 "le montant des frais ne doit pas être négatif" => floatval($infos['tx_fee_amount']) < 0,
-                "type de frais inconnu"                         => !in_array($infos['tx_fee_type'], array('fixed_currency', 'fixed_index', 'percent_currency', 'percent_index')),
+                "type de frais inconnu"                         => !in_array($infos['tx_fee_type'], ['fixed_currency', 'fixed_index', 'percent_currency', 'percent_index']),
                 "date/heure incorrectes"                        => $tx_datetime === false,
                 "date & heure futures"                          => $tx_timestamp === false ? false : $tx_timestamp > (new DateTime())->getTimestamp()
             );
@@ -268,7 +208,7 @@ class Portfolio
             $new_tx = App::$db->prepare("INSERT INTO transaction (tx_port_id, tx_type, tx_pair_id, tx_price, tx_amount, tx_fee_amount, tx_fee_type, tx_timestamp) VALUES (:tx_port_id, :tx_type, :tx_pair_id, :tx_price, :tx_amount, :tx_fee_amount, :tx_fee_type, :tx_timestamp)");
             $new_tx->execute(array(
                 "tx_port_id"    => $this->infos['id'],
-                "tx_type"       => 'buy',
+                "tx_type"       => $infos['tx_type'],
                 "tx_pair_id"    => $tx_pair->infos['id'],
                 "tx_price"      => $infos['tx_price'],
                 "tx_amount"     => $infos['tx_amount'],
@@ -279,11 +219,140 @@ class Portfolio
             return $new_tx ? array(true) : array(false, 'erreur');
             break;
 
+            // TRANSFER
+            case 'transfer':
+            // Get matching data
+            $tx_curr = Currency::GetById($infos['tx_transfer_curr_id']);
+            $exchange_from_infos = array(
+                'name' => trim($infos['tx_transfer_exchange_id_from'])
+            );
+            $tx_exchange_from = Exchange::GetByTitle($exchange_from_infos);
+            $exchange_to_infos = array(
+                'name' => trim($infos['tx_transfer_exchange_id_to'])
+            );
+            $tx_exchange_to = Exchange::GetByTitle($exchange_to_infos);
+            $tx_datetime    = DateTime::createFromFormat('Y-m-d H:i', $infos['tx_date'] . ' ' . $infos['tx_hour']);
+            $tx_timestamp   = $tx_datetime === false ? false : $tx_datetime->getTimestamp();
+            // Data validation
+            $validation     = array(
+                "aucune monnaie sélectionnée"         => empty($infos['tx_transfer_curr_id']),
+                "monnaie introuvable"                 => $tx_curr === false,
+                "sélectionnez 2 exchanges"            => empty($infos['tx_transfer_exchange_id_from']) || empty($infos['tx_transfer_exchange_id_to']),
+                "sélectionnez 2 exchanges différents" => $infos['tx_transfer_exchange_id_from'] == $infos['tx_transfer_exchange_id_to'],
+                "exchange à débiter introuvable"      => $tx_exchange_from === false,
+                "exchange à créditer introuvable"     => $tx_exchange_to === false,
+                "montant incorrect"                   => !is_numeric($infos['tx_amount']),
+                "le montant doit être positif"        => floatval($infos['tx_amount']) <= 0,
+                "montant des frais incorrect"         => !is_numeric($infos['tx_fee_amount']),
+                "montant des frais négatif"           => floatval($infos['tx_fee_amount']) < 0,
+                "type de frais incorrect"             => !in_array($infos['tx_fee_type'], ['fixed_currency', 'percent_currency']),
+                "date/heure incorrectes"              => $tx_datetime === false,
+                "date & heure futures"                => $tx_timestamp === false ? false : $tx_timestamp > (new DateTime())->getTimestamp()
+            );
+            if (in_array(true, $validation)) {
+                return array(false, array_search(true, $validation));
+            }
+            // Save
+            $new_tx = App::$db->prepare("INSERT INTO transaction (tx_port_id, tx_type, tx_transfer_curr_id, tx_transfer_exchange_id_from, tx_transfer_exchange_id_to, tx_amount, tx_fee_amount, tx_fee_type, tx_timestamp) VALUES (:tx_port_id, :tx_type, :tx_transfer_curr_id, :tx_transfer_exchange_id_from, :tx_transfer_exchange_id_to, :tx_amount, :tx_fee_amount, :tx_fee_type, :tx_timestamp)");
+            $new_tx->execute(array(
+                "tx_port_id"                   => $this->infos['id'],
+                "tx_type"                      => 'transfer',
+                "tx_transfer_curr_id"          => $tx_curr->infos['id'],
+                "tx_transfer_exchange_id_from" => $tx_exchange_from->infos['id'],
+                "tx_transfer_exchange_id_to"   => $tx_exchange_to->infos['id'],
+                "tx_amount"                    => $infos['tx_amount'],
+                "tx_fee_amount"                => $infos['tx_fee_amount'],
+                "tx_fee_type"                  => $infos['tx_fee_type'],
+                "tx_timestamp"                 => $tx_timestamp
+            ));
+            return $new_tx ? array(true) : array(false, 'erreur');
+            break;
+
+            // WITHDRAW
+            case 'withdraw':
+            // Get matching data
+            $tx_curr = Currency::GetById($infos['tx_transfer_curr_id']);
+            $exchange_infos = array(
+                'name' => trim($infos['tx_transfer_exchange_id_from'])
+            );
+            $tx_exchange_from = Exchange::GetByTitle($exchange_infos);
+            $tx_datetime    = DateTime::createFromFormat('Y-m-d H:i', $infos['tx_date'] . ' ' . $infos['tx_hour']);
+            $tx_timestamp   = $tx_datetime === false ? false : $tx_datetime->getTimestamp();
+            // Data validation
+            $validation     = array(
+                "aucune monnaie sélectionnée"  => empty($infos['tx_transfer_curr_id']),
+                "monnaie introuvable"          => $tx_curr === false,
+                "aucun exchange sélectionné"   => empty($infos['tx_transfer_exchange_id_from']),
+                "exchange introuvable"         => $tx_exchange_from === false,
+                "montant incorrect"            => !is_numeric($infos['tx_amount']),
+                "le montant doit être positif" => floatval($infos['tx_amount']) <= 0,
+                "montant des frais incorrect"  => !is_numeric($infos['tx_fee_amount']),
+                "montant des frais négatif"    => floatval($infos['tx_fee_amount']) < 0,
+                "type de frais incorrect"      => !in_array($infos['tx_fee_type'], ['fixed_currency', 'percent_currency']),
+                "date/heure incorrectes"       => $tx_datetime === false,
+                "date & heure futures"         => $tx_timestamp === false ? false : $tx_timestamp > (new DateTime())->getTimestamp()
+            );
+            if (in_array(true, $validation)) {
+                return array(false, array_search(true, $validation));
+            }
+            // Save
+            $new_tx = App::$db->prepare("INSERT INTO transaction (tx_port_id, tx_type, tx_transfer_curr_id, tx_transfer_exchange_id_from, tx_amount, tx_fee_amount, tx_fee_type, tx_timestamp) VALUES (:tx_port_id, :tx_type, :tx_transfer_curr_id, :tx_transfer_exchange_id_from, :tx_amount, :tx_fee_amount, :tx_fee_type, :tx_timestamp)");
+            $new_tx->execute(array(
+                "tx_port_id"                   => $this->infos['id'],
+                "tx_type"                      => 'deposit',
+                "tx_transfer_curr_id"          => $tx_curr->infos['id'],
+                "tx_transfer_exchange_id_from" => $tx_exchange_from->infos['id'],
+                "tx_amount"                    => $infos['tx_amount'],
+                "tx_fee_amount"                => $infos['tx_fee_amount'],
+                "tx_fee_type"                  => $infos['tx_fee_type'],
+                "tx_timestamp"                 => $tx_timestamp
+            ));
+            return $new_tx ? array(true) : array(false, 'erreur');
+            break;
+
             // ERROR
             default:
             return array(false, 'type de transaction inconnu');
             break;
         }
+    }
+
+    // GET 1 INVESTMENT
+    public function FetchOneInvestment(int $curr_id)
+    {
+        $tx_list = App::$db->prepare("SELECT * FROM transaction LEFT JOIN pair ON transaction.tx_pair_id = pair.pair_id WHERE transaction.tx_port_id = :port_id AND ((transaction.tx_type = 'deposit' AND transaction.tx_transfer_curr_id = :curr_id) OR (transaction.tx_type = 'buy' AND (pair.pair_curr_a = :curr_id OR pair.pair_curr_b = :curr_id))) ORDER BY transaction.tx_timestamp");
+        $tx_list->execute(array(
+            "port_id" => $this->infos['id'],
+            "curr_id" => $curr_id
+        ));
+        $tx_history = array();
+        foreach ($tx_list->fetchAll(PDO::FETCH_ASSOC) as $tx) {
+            switch ($tx['tx_type']) {
+                case 'deposit':
+                $tx_history[] = array(
+                    'type'     => 'deposit',
+                    'amount'   => floatval($tx['tx_amount']),
+                    'currency' => new Currency($tx['tx_transfer_curr_id']),
+                    'exchange' => new Exchange($tx['tx_transfer_exchange_id_to']),
+                    'datetime' => (new DateTime())->setTimestamp($tx['tx_timestamp'])->format('d/m/Y H:i')
+                );
+                break;
+
+                case 'buy':
+                $pair = new Pair($tx['tx_pair_id']);
+                $tx_history[] = array(
+                    'type'     => $pair->currency->infos['id'] == $curr_id ? 'buy' : 'sell',
+                    'amount'   => floatval($tx['tx_amount']),
+                    'price'    => floatval($tx['tx_price']),
+                    'currency' => $pair->currency,
+                    'index'    => $pair->index,
+                    'exchange' => $pair->exchange,
+                    'datetime' => (new DateTime())->setTimestamp($tx['tx_timestamp'])->format('d/m/Y H:i')
+                );
+                break;
+            }
+        }
+        return $tx_history;
     }
 
     // CREATE NEW PORTFOLIO

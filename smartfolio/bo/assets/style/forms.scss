@@ -55,8 +55,8 @@
     }
 }
 
-// TRANSACTION FORM
-.form_tx {
+// FIRST TRANSACTION FORM
+.first_tx {
 
     .tx_type_block {
         display: none;
@@ -72,6 +72,107 @@
 
         > * {
             width: 100%;
+        }
+    }
+
+    .input_prefix {
+        height: auto;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        box-sizing: border-box;
+        border: 1px solid $grey;
+        margin-bottom: 5px;
+        padding: 3px 0;
+        background: white;
+
+        .prefix {
+            min-width: 10%;
+            height: 100%;
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: center;
+            align-items: center;
+            background: lighten($grey, 60);
+            padding: 3px;
+
+            i {
+                margin: 0 5px;
+                color: $blue;
+            }
+
+            span {
+                font-family: $font_title;
+                font-weight: bold;
+            }
+        }
+
+        input {
+            flex-grow: 1;
+            border: none;
+            // border-left: 1px solid $grey;
+            margin: 0;
+        }
+    }
+
+    input[type=submit]:disabled {
+        color: white;
+        background: tomato;
+        border: 2px solid tomato;
+
+        &:hover {
+            cursor: not-allowed;
+        }
+    }
+}
+
+// TRANSACTION FORM
+.tx_form {
+
+    &.hidden {
+        display: none;
+    }
+
+    h3, label {
+        color: white;
+    }
+
+    h3 {
+        width: auto;
+        flex-grow: 1;
+    }
+
+    button {
+        width: auto;
+        background: none;
+        border: none;
+        align-self: flex-end;
+
+        &:focus { outline: none; }
+
+        i {
+            font-size: 1.6rem;
+            color: tomato;
+            cursor: pointer;
+        }
+    }
+
+    #tx_fields {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+        background: transparentize(lighten($grey, 50), 0.5);
+        padding: 10px 20px;
+        margin-bottom: 5px;
+
+        > * {
+            width: 100%;
+        }
+        .s15 { width: 20%; }
+        .l15 { width: 80%; }
+
+        .hidden {
+            display: none;
         }
     }
 

@@ -40,25 +40,22 @@ try {
         <div id="accumulators">
             <h3>Accumulateurs:</h3>
             <?php
-            foreach ($portfolio->accumulators as $acc) {
-                $inv = $portfolio->investments[$acc->infos['id']] ?? false;
-                echo '<div class="accumulator">';
-                echo '  <h4>' . $acc->infos['name'] . '</h4>';
-                echo '  <p>' . ($inv['balance'] ?? 0) . ' <b>' . $acc->infos['symbol'] . '</b></p>';
-                echo '</div>';
+            foreach ($portfolio->GetAccumulators() as $inv) {
+                echo '<div class="accumulator"><a href="investment.php?port=' . $portfolio->infos['id'] . '&inv=' . $inv->currency->infos['id'] . '">';
+                echo '  <h4>' . $inv->currency->infos['name'] . '</h4>';
+                echo '  <p>' . $inv->GetBalance() . ' <b>' . $inv->currency->infos['symbol'] . '</b></p>';
+                echo '</a></div>';
             }
             ?>
         </div>
         <div id="investments">
             <h3>Investissements:</h3>
             <?php
-            foreach ($portfolio->investments as $inv) {
-                if ($inv['type'] == 'investment') {
-                    echo '<div class="investment">';
-                    echo '  <h4>' . $inv['currency']->infos['name'] . '</h4>';
-                    echo '  <p>' . $inv['balance'] . ' <b>' . $inv['currency']->infos['symbol'] . '</b></p>';
-                    echo '</div>';
-                }
+            foreach ($portfolio->GetInvestments() as $inv) {
+                echo '<div class="investment"><a href="investment.php?port=' . $portfolio->infos['id'] . '&inv=' . $inv->currency->infos['id'] . '">';
+                echo '  <h4>' . $inv->currency->infos['name'] . '</h4>';
+                echo '  <p>' . $inv->GetBalance() . ' <b>' . $inv->currency->infos['symbol'] . '</b></p>';
+                echo '</a></div>';
             }
             ?>
         </div>

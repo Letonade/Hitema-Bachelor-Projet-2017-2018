@@ -174,6 +174,17 @@ class Currency
             return false;
         }
     }
+
+    // TRANSACTION: GET WITH ID
+    static public function GetById($curr_id)
+    {
+        try {
+            $currency = new Currency($curr_id);
+            return $currency;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }
 
 

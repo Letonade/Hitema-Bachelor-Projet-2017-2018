@@ -7,6 +7,7 @@ class App
 {
     static public $response;
     static public $db;
+    static public $pagination;
     static private $exitOnMessages = false;
 
     static public function SetDB($db)

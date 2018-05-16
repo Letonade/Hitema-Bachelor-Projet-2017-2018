@@ -12,13 +12,14 @@ if (!isset($_SESSION['user'])) {
 // OOP
 include '../assets/php/app.class.php';
 include '../assets/php/user.class.php';
-include 'assets/php/portfolio.class.php';
 include 'assets/php/agent.class.php';
-include 'assets/php/customer.class.php';
-include 'assets/php/pair.class.php';
-include 'assets/php/ohlc_api.class.php';
 include 'assets/php/currency.class.php';
+include 'assets/php/customer.class.php';
 include 'assets/php/exchange.class.php';
+include 'assets/php/investment.class.php';
+include 'assets/php/pair.class.php';
+include 'assets/php/portfolio.class.php';
+include 'assets/php/ohlc_api.class.php';
 
 App::SetDB($db);
 
