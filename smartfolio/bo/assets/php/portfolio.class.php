@@ -9,7 +9,7 @@ class Portfolio
     public $customer;
     public $agent;
     public $accumulators;
-    public $investments = array();
+    public $investments = [];
 
     function __construct($id)
     {
@@ -71,10 +71,7 @@ class Portfolio
                 "port_id" => $this->infos['id'],
                 "curr_id" => $acc->infos['id']
             ));
-            // Verification
-            $old_acc_list = count($this->accumulators);
-            $this->GetAccumulators();
-            return $old_acc_list < count($this->accumulators) ? array(true) : array(false, 'erreur');
+            return $new_acc ? array(true) : array(false, 'erreur');
 
         } catch (\Exception $e) {
             return array(false, 'Accumulateur - ' . $e->getMessage());
@@ -103,10 +100,7 @@ class Portfolio
                 "port_id" => $this->infos['id'],
                 "curr_id" => $acc->infos['id']
             ));
-            // Verification
-            $old_acc_list = count($this->accumulators);
-            $this->GetAccumulators();
-            return $old_acc_list > count($this->accumulators) ? array(true) : array(false, 'erreur');
+            return $del_acc ? array(true) : array(false, 'erreur');
 
         } catch (\Exception $e) {
             return array(false, 'Accumulateur - ' . $e->getMessage());

@@ -90,7 +90,7 @@ class Investment
                 );
                 if ($costs['pair']->currency->infos['id'] == $this->currency->infos['id']) {
                     $this->balance += $costs['amount'];
-                } else {
+                } elseif ($this->balance >= $costs['cost']) {
                     $this->balance -= $costs['cost'];
                 }
                 $this->last_pair = $costs['pair']->infos['id'];
@@ -127,7 +127,7 @@ class Investment
                     'datetime' => (new DateTime())->setTimestamp($tx['tx_timestamp'])->format('d/m/Y H:i'),
                     'sumup'    => floatval($tx['tx_amount']) . ' ' . $costs['pair']->currency->infos['symbol'] . ' @' . $costs['pair']->exchange->infos['name']
                 );
-                if ($costs['pair']->currency->infos['id'] == $this->currency->infos['id']) {
+                if ($costs['pair']->currency->infos['id'] == $this->currency->infos['id'] && $this->balance >= $costs['amount']) {
                     $this->balance -= $costs['amount'];
                 } else {
                     if (in_array($tx['tx_fee_type'], ['fixed_index', 'percent_index'])) {
