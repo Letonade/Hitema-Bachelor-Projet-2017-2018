@@ -8,7 +8,6 @@ try {
     App::Respond('Portefeuille', $e->getMessage(), true);
 }
 
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,6 +43,15 @@ try {
                 echo '<div class="accumulator"><a href="investment.php?port=' . $portfolio->infos['id'] . '&inv=' . $inv->currency->infos['id'] . '">';
                 echo '  <h4>' . $inv->currency->infos['name'] . '</h4>';
                 echo '  <p>' . $inv->GetBalance() . ' <b>' . $inv->currency->infos['symbol'] . '</b></p>';
+                echo '  <div class="rois">';
+                foreach ($portfolio->GetAccumulators() as $acc) {
+                    if ($inv->currency->infos['id'] != $acc->currency->infos['id']) {
+                        echo '<p>' . $acc->currency->infos['symbol'] . '</p>';
+                        $roi_class = $inv->GetDelta($acc->currency) >= 0 ? 'delta_up' : 'delta_down';
+                        echo '<p class="' . $roi_class . '">' . $inv->GetDelta($acc->currency) . ' %</p>';
+                    }
+                }
+                echo '  </div>';
                 echo '</a></div>';
             }
             ?>
@@ -55,6 +63,13 @@ try {
                 echo '<div class="investment"><a href="investment.php?port=' . $portfolio->infos['id'] . '&inv=' . $inv->currency->infos['id'] . '">';
                 echo '  <h4>' . $inv->currency->infos['name'] . '</h4>';
                 echo '  <p>' . $inv->GetBalance() . ' <b>' . $inv->currency->infos['symbol'] . '</b></p>';
+                echo '  <div class="rois">';
+                foreach ($portfolio->GetAccumulators() as $acc) {
+                    echo '<p>' . $acc->currency->infos['symbol'] . '</p>';
+                    $roi_class = $inv->GetDelta($acc->currency) >= 0 ? 'delta_up' : 'delta_down';
+                    echo '<p class="' . $roi_class . '">' . $inv->GetDelta($acc->currency) . ' %</p>';
+                }
+                echo '  </div>';
                 echo '</a></div>';
             }
             ?>

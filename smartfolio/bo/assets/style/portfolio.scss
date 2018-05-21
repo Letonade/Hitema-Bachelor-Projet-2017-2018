@@ -21,7 +21,7 @@
     .accumulator {
         width: 30%;
         height: auto;
-        padding: 10px;
+        padding-top: 10px;
         background: rgba(255, 255, 255, 0.1);
         @include trs(0.15s);
 
@@ -44,6 +44,35 @@
                 width: 100%;
                 font-size: 1.2rem;
                 text-align: center;
+            }
+
+            .rois {
+                width: 100%;
+                margin-top: 5px;
+                padding: 10px;
+                box-sizing: border-box;
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: center;
+                align-items: flex-start;
+                align-content: flex-start;
+                background: rgba(255, 255, 255, 0.1);
+
+                p {
+                    width: 50%;
+
+                    &:nth-of-type(even) {
+                        text-align: right;
+
+                        &.delta_up {
+                            color: lightgreen;
+                        }
+
+                        &.delta_down {
+                            color: tomato;
+                        }
+                    }
+                }
             }
         }
     }
@@ -69,7 +98,7 @@
     .investment {
         width: 17%;
         height: auto;
-        padding: 10px;
+        padding-top: 10px;
         margin: 10px 1.5%;
         box-sizing: border-box;
         background: rgba(0, 0, 0, 0.1);
@@ -94,6 +123,36 @@
                 width: 100%;
                 font-size: 1.2rem;
                 text-align: center;
+            }
+
+            .rois {
+                width: 100%;
+                margin-top: 5px;
+                padding: 10px;
+                box-sizing: border-box;
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: center;
+                align-items: flex-start;
+                align-content: flex-start;
+                background: rgba(0, 0, 0, 0.3);
+
+                p {
+                    width: 50%;
+
+                    &:nth-of-type(even) {
+                        text-align: right;
+                        font-weight: bold;
+
+                        &.delta_up {
+                            color: lightgreen;
+                        }
+
+                        &.delta_down {
+                            color: tomato;
+                        }
+                    }
+                }
             }
         }
     }

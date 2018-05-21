@@ -61,6 +61,15 @@
         }
     }
 
+
+    p.delta_up {
+        color: lightgreen;
+    }
+
+    p.delta_down {
+        color: tomato;
+    }
+
     .actions {
         width: 100%;
         padding: 5px 15px;
@@ -145,6 +154,59 @@
             height: 50%;
             border-right: 1px solid lightgrey;
             box-sizing: border-box;
+            display: flex;
+            flex-flow: row wrap;
+            align-items: flex-start;
+            align-content: flex-start;
+
+            #balance {
+                width: 100%;
+                height: auto;
+                margin: 10px;
+                box-sizing: border-box;
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid lightgrey;
+                font-size: 1.2rem;
+
+                span {
+                    font-size: 1.2rem;
+                    padding: 4px 8px;
+                    border-radius: 2px;
+                    background: rgba(255, 255, 255, 0.1);
+                }
+            }
+
+            #roi, #global {
+                width: 50%;
+                height: auto;
+                padding: 10px;
+                box-sizing: border-box;
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: space-around;
+                align-items: flex-start;
+
+                h3 {
+                    width: 100%;
+                    font-size: 1.2rem;
+                }
+
+                p {
+                    width: 50%;
+                    margin-top: 4px;
+
+                    &:nth-of-type(even) {
+                        text-align: right;
+                    }
+                }
+            }
+
+            #global {
+                border-left: 1px solid lightgrey;
+            }
         }
 
         #alerts {
@@ -162,6 +224,7 @@
 
     #history {
         width: 30%;
+        min-width: 400px;
         height: 100%;
         border-left: 1px solid lightgrey;
         display: flex;
@@ -173,13 +236,17 @@
             padding: 0 10px;
             box-sizing: border-box;
 
-            div {
+            .tx {
                 width: 100%;
+                height: auto;
                 margin: 10px 0;
                 padding: 3px;
                 box-sizing: border-box;
                 border-radius: 3px;
                 background: rgba(255, 255, 255, 0.1);
+                display: flex;
+                flex-flow: row wrap;
+                justify-content: space-around;
 
                 i {
                     color: $blue;
@@ -191,6 +258,29 @@
 
                 &.sell i {
                     color: tomato;
+                }
+
+                > p {
+                    width: 100%;
+                    padding: 5px;
+                    border-bottom: 1px solid lightgrey;
+                }
+
+                .tx_part {
+                    width: 27.5%;
+                    display: flex;
+                    flex-flow: column nowrap;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-top: 7.5px;
+
+                    h4 {
+                        font-size: 0.9rem;
+                    }
+
+                    p {
+                        font-size: 0.8rem;
+                    }
                 }
 
                 h6 {

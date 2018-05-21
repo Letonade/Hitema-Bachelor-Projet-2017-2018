@@ -155,7 +155,15 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
                 <div class="actions">
                     <h3><i class="fas fa-info"></i> Infos</h3>
                 </div>
-                <p>Solde: <?php echo $investment->GetBalance() . ' ' . $investment->currency->infos['symbol']; ?></p>
+                <div id="balance">Solde: <span><?php echo $investment->GetBalance() . ' ' . $investment->currency->infos['symbol']; ?></span></div>
+                <div id="roi">
+                    <h3>ROI:</h3>
+                    <?php echo $investment->HTML_AccumulatorDelta($portfolio); ?>
+                </div>
+                <div id="global">
+                    <h3>Infos:</h3>
+                    <?php echo $investment->HTML_GlobalData($portfolio); ?>
+                </div>
             </div>
             <!-- ALERTS -->
             <div id="alerts">
@@ -174,31 +182,8 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
             </div>
             <div id="tx_list">
                 <?php
-                foreach ($investment->GetTxHistory() as $tx) {
-                    echo '<div class="' . $tx['type'] . '">';
-                    switch ($tx['type']) {
-                        case 'deposit':
-                        echo '<p><i class="fas fa-upload"></i> ' . $tx['sumup'] . '<br>' . $tx['cost'] . '</p>';
-                        break;
-
-                        case 'buy':
-                        echo '<p><i class="fas fa-plus"></i> ' . $tx['sumup'] . '<br>' . $tx['cost'] . '</p>';
-                        break;
-
-                        case 'transfer':
-                        echo '<p><i class="fas fa-exchange-alt"></i> ' . $tx['sumup'] . '<br>' . $tx['cost'] . '</p>';
-                        break;
-
-                        case 'sell':
-                        echo '<p><i class="fas fa-minus"></i> ' . $tx['sumup'] . '<br>' . $tx['cost'] . '</p>';
-                        break;
-
-                        case 'withdraw':
-                        echo '<p><i class="fas fa-download"></i> ' . $tx['sumup'] . '<br>' . $tx['cost'] . '</p>';
-                        break;
-                    }
-                    echo '  <h6>' . $tx['datetime'] . '</h6>';
-                    echo '</div>';
+                foreach (array_reverse($investment->GetTxHistory()) as $tx) {
+                    echo $tx->SumUp();
                 }
                 ?>
             </div>
