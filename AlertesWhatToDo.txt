@@ -1,0 +1,39 @@
+
+Objectifs :
+    Dans un portfolio, on pourras attribuer des alertes aux différents investissements.
+    Une alerte concerne :
+        un agent ou manager (id),
+        un portfolio(id),
+        un investissement (id),
+        une valeur de comparaison (num),
+        un comparateur (Supérieur ou inférieur ; Vrai/Faux),
+    A chaque entrée sur le portefeuille concerné, les alertes en cours sont affiché en méssages informatif.
+    Une alerte peut-être supprimer sur la page de l'investissement en cliquant sur sa croix.
+
+    1. Ajouter la Table des alertes.
+    2. Ajouter le formulaire de création d'alerte aux page des investissement
+        a. js pour l'action du "+" (passage du hidden et gestion des champs spéciaux)
+        tel que : (voir tx_form.js)
+::          window.addEventListener("DOMContentLoaded", function () {
+::              // OPEN/CLOSE
+::              document.querySelector('#alerts > .actions > button').addEventListener('click', function () {
+::                  document.getElementById('form_tx').classList.remove('hidden');
+::              });
+::              document.querySelector('#form_alerts > form > button').addEventListener('click', function () {
+::                  document.getElementById('form_tx').classList.add('hidden');
+::              });
+        b. Modifier investment.php de manière à mettre un nouveau formulaire en hidden pour les alertes.
+        c. Créer un new_alerte.js (je n'ai pas encore saisi son fonctionnement).
+    3. Faire apparaître les alertes
+        -> voir avec aymeric pour le style.
+        a. modifier investment pour les faire apparaître.
+        b. [donner la possibilité de supprimer l'alerte]
+        c. faire apparaître les messages sur l'accueil du portefueille
+            -> nouvelle requête sur la nouvelle table
+
+
+
+
+
+
+
