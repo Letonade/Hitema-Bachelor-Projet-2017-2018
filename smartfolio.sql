@@ -2,10 +2,10 @@
 -- version 4.7.9
 -- https://www.phpmyadmin.net/
 --
--- Hôte : localhost
--- Généré le :  mar. 15 mai 2018 à 14:41
--- Version du serveur :  10.1.30-MariaDB
--- Version de PHP :  7.2.1
+-- Hôte : 127.0.0.1
+-- Généré le :  mer. 06 juin 2018 à 13:38
+-- Version du serveur :  10.1.31-MariaDB
+-- Version de PHP :  7.2.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,8 +21,25 @@ SET time_zone = "+00:00";
 --
 -- Base de données :  `smartfolio`
 --
-CREATE DATABASE IF NOT EXISTS `smartfolio` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS `smartfolio` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `smartfolio`;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `alerts`
+--
+
+CREATE TABLE `alerts` (
+  `alerts_id` int(8) NOT NULL,
+  `user_id` int(4) NOT NULL,
+  `acc_port_id` int(8) NOT NULL,
+  `acc_curr_id` int(8) NOT NULL,
+  `investment_type` text NOT NULL,
+  `alerts_value` decimal(36,18) NOT NULL,
+  `alerts_compare` text NOT NULL,
+  `alerts_type` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Table pour les alertes.';
 
 -- --------------------------------------------------------
 
@@ -159,6 +176,12 @@ CREATE TABLE `user` (
 --
 
 --
+-- Index pour la table `alerts`
+--
+ALTER TABLE `alerts`
+  ADD PRIMARY KEY (`alerts_id`);
+
+--
 -- Index pour la table `currency`
 --
 ALTER TABLE `currency`
@@ -175,12 +198,6 @@ ALTER TABLE `customer`
 --
 ALTER TABLE `exchange`
   ADD PRIMARY KEY (`exchange_id`);
-
---
--- Index pour la table `ohlc`
---
-ALTER TABLE `ohlc`
-  ADD PRIMARY KEY (`ohlc_id`);
 
 --
 -- Index pour la table `pair`
@@ -217,58 +234,58 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT pour la table `alerts`
+--
+ALTER TABLE `alerts`
+  MODIFY `alerts_id` int(8) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT pour la table `currency`
 --
 ALTER TABLE `currency`
-  MODIFY `curr_id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `curr_id` int(8) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `cust_id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `cust_id` int(8) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `exchange`
 --
 ALTER TABLE `exchange`
-  MODIFY `exchange_id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT pour la table `ohlc`
---
-ALTER TABLE `ohlc`
-  MODIFY `ohlc_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=602;
+  MODIFY `exchange_id` int(4) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `pair`
 --
 ALTER TABLE `pair`
-  MODIFY `pair_id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `pair_id` int(8) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `portfolio`
 --
 ALTER TABLE `portfolio`
-  MODIFY `port_id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `port_id` int(8) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `port_accumulator`
 --
 ALTER TABLE `port_accumulator`
-  MODIFY `acc_id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `acc_id` int(8) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `tx_id` int(24) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `tx_id` int(24) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_id` int(4) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

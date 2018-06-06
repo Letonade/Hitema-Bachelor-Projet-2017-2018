@@ -1,6 +1,5 @@
 <?php
 include 'assets/inc/init.php';
-
 // GET PORTFOLIO
 try {
     $portfolio = new Portfolio($_GET['port']);
@@ -51,6 +50,7 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
     <script src="assets/js/investment.js" charset="utf-8"></script>
     <link rel="stylesheet" href="assets/style/investment.min.css">
     <script src="assets/js/tx_form.js" charset="utf-8"></script>
+    <script src="assets/js/alerts_form.js" charset="utf-8"></script>
     <script src="assets/js/response.js" charset="utf-8"></script>
     <title>Portefeuille - <?php echo $portfolio->customer->infos['name'] ?? 'erreur'; ?></title>
 </head>
@@ -59,10 +59,11 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
     // HEADER
     include 'assets/inc/header_portfolio.php';
     ?>
+    <!-- FORM FOR TX-->
     <div id="form_tx" class="<?php echo isset($_POST['new_tx']) ? '' : 'hidden' ?>">
         <form class="form_new tx_form" action="investment.php?<?php echo $_SERVER['QUERY_STRING']; ?>" method="post">
             <h3><i class="fas fa-plus"></i> Ajouter une transaction</h3>
-            <button type="button" name="button"><i class="far fa-times-circle"></i></button>
+            <button type="button" name="button"><i class="far fa-times-circle">X</i></button>
             <!-- SELECT TX TYPE -->
             <label for="tx_type">Type de transaction:</label>
             <select name="tx_type">
@@ -130,6 +131,43 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
             <input type="submit" name="new_tx" value="Nouvel investissement" <?php echo isset($_POST['tx_type']) ? '' : 'disabled'; ?>>
         </form>
     </div>
+    <!--FORM FOR ALERTS -->
+    <div id="form_alerts" class="<?php echo isset($_POST['new_alerts']) ? '' : 'hidden' ?>">
+        <form class="form_new alerts_form" action="investment.php?<?php echo $_SERVER['QUERY_STRING']; ?>" method="post">
+            <h3><i class="fas fa-plus"></i> Ajouter une alerte</h3>
+            <button type="button" name="button"><i class="far fa-times-circle">X</i></button>
+            <!-- SELECT alerts TYPE -->
+            <label for="alerts_type">Type d'alerte:</label>
+            <select name="alerts_type">
+                <option hidden>--- Choix ---</option>
+                <option value="marge" <?php echo ($_POST['alerts_type'] ?? '') == 'marge' ? 'selected' : ''; ?>>Sur une marge</option>
+                <option value="fixe" <?php echo ($_POST['alerts_type'] ?? '') == 'fixe' ? 'selected' : ''; ?>>Sur une valeur fixe</option>
+            </select>
+            <!-- SPECIFIC FIELDS -->
+            <div id="alerts_fields">
+            <!-- Comparateur -->
+            <label class="hidden" data-alerts='["marge", "fixe"]' for="alerts_comparator">Comparateur :</label>
+            <select name="alerts_comparator" class="hidden input_prefix" data-alerts='["marge", "fixe"]' id="alerts_comparator">
+                <option hidden>--- Choix ---</option>
+                <option value="==" <?php echo ($_POST['alerts_comparator'] ?? '') == '"=="' ? 'selected' : ''; ?>>==</option>
+                <option value=">=" <?php echo ($_POST['alerts_comparator'] ?? '') == '">="' ? 'selected' : ''; ?>>>=</option>
+                <option value=">"  <?php echo ($_POST['alerts_comparator'] ?? '') == '">" ' ? 'selected' : ''; ?>>></option>
+                <option value="<=" <?php echo ($_POST['alerts_comparator'] ?? '') == '"<="' ? 'selected' : ''; ?>><=</option>
+                <option value="<"  <?php echo ($_POST['alerts_comparator'] ?? '') == '"<" ' ? 'selected' : ''; ?>><</option>
+            </select>
+                <!-- Valeur -->
+                <label class="hidden" data-alerts='["marge"]' for="alerts_value">Marge :</label>
+                <label class="hidden" data-alerts='["fixe"]' for="alerts_value">Valeur :</label>
+                <div class="hidden input_prefix" data-alerts='["marge", "fixe"]' id="alerts_value">
+                    <div class="prefix"><i class="fas fa-dollar-sign"></i><span><?php echo $investment->currency->infos['symbol']; ?></span></div>
+                    <input type="number" name="alerts_value" value="<?php echo $_POST['alerts_value'] ?? "0"; ?>" min="0" step='0.000000000000000001'>
+                </div>
+            </div>
+            <!-- Submit info -->
+            <input type="submit" name="new_alerts" value="Nouvel investissement" <?php echo isset($_POST['alerts_type']) ? '' : 'disabled'; ?>>
+        </form>
+    </div>
+    <!-- FIN FORM -->
     <?php App::DisplayMessages(); ?>
     <main id="investment">
         <!-- CHART -->
@@ -169,7 +207,7 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
             <div id="alerts">
                 <div class="actions">
                     <h3><i class="fas fa-bell"></i> Alertes</h3>
-                    <button type="button" name="button"><i class="fas fa-plus-circle"></i></button>
+                    <button type="button" name="button"><i class="fas fa-plus-circle">+</i></button>
                 </div>
                 <div id="alert_list"></div>
             </div>
@@ -178,7 +216,7 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
         <div id="history">
             <div class="actions">
                 <h3><i class="fas fa-university"></i> Historique de transactions</h3>
-                <button type="button" name="button"><i class="fas fa-plus-circle"></i></button>
+                <button type="button" name="button"><i class="fas fa-plus-circle">+</i></button>
             </div>
             <div id="tx_list">
                 <?php

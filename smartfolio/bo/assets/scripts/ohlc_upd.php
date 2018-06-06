@@ -1,4 +1,6 @@
 <?php
+ini_set('max_execution_time', 15000);
+
 include '../inc/parameters.php';
 include '../../../assets/php/db_con.php';
 include '../../../assets/php/app.class.php';

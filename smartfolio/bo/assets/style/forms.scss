@@ -55,10 +55,10 @@
     }
 }
 
-// FIRST TRANSACTION FORM
-.first_tx {
+// FIRST TRANSACTION OR ALERTS FORM
+.first_tx, .first_alerts {
 
-    .tx_type_block {
+    .tx_type_block, alerts_type_block {
         display: none;
         background: lighten($grey, 50);
         padding: 10px 20px;
@@ -127,7 +127,7 @@
 }
 
 // TRANSACTION FORM
-.tx_form {
+.tx_form, .alerts_form {
 
     &.hidden {
         display: none;
@@ -157,7 +157,7 @@
         }
     }
 
-    #tx_fields {
+    #tx_fields, #alerts_fields {
         display: flex;
         flex-flow: row wrap;
         justify-content: space-around;
