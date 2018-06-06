@@ -29,7 +29,26 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
             'Nouvelle transaction',
             $new_tx[0] ? null : $new_tx[1]
         );
-        if ($new_tx[0]) {
+        if ($new_tx[0] && $new_alerts[0]) {
+            unset($_POST);
+        }
+    }
+    if (isset($_POST['new_alerts'])) {
+        $new_alerts = $portfolio->Newalerts([
+            'user_id'               => $portfolio->agent->infos['id'],
+            'acc_port_id'           => $portfolio->infos['id'],
+            'acc_curr_id'           => $investment->currency->infos['id'],
+            'investment_type'       => $investment->infos['type'],
+            'alerts_value'          => $_POST['alerts_value'],
+            'alerts_comparator'     => $_POST['alerts_comparator'],
+            'alerts_type'           => $_POST['alerts_type']
+
+        ]);
+        App::Respond(
+            'Nouvelle alerte',
+            $new_alerts[0] ? null : $new_alerts[1]
+        );
+        if ($new_tx[0] && $new_alerts[0]) {
             unset($_POST);
         }
     }
@@ -164,7 +183,7 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
                 </div>
             </div>
             <!-- Submit info -->
-            <input type="submit" name="new_alerts" value="Nouvel investissement" <?php echo isset($_POST['alerts_type']) ? '' : 'disabled'; ?>>
+            <input type="submit" name="new_alerts" value="Nouvelle alerte" <?php echo isset($_POST['alerts_type']) ? '' : 'disabled'; ?>>
         </form>
     </div>
     <!-- FIN FORM -->
@@ -209,7 +228,15 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
                     <h3><i class="fas fa-bell"></i> Alertes</h3>
                     <button type="button" name="button"><i class="fas fa-plus-circle">+</i></button>
                 </div>
-                <div id="alert_list"></div>
+                <div id="alert_list"><!--insérer la liste ici--><h3>
+
+                <div class="tx_part">;
+                <h4>POLOP</h4>;
+                <p class="">pimp</p>;
+                </div>';
+
+
+                Affichage</h3></div>
             </div>
         </div>
         <!-- HISTORY -->

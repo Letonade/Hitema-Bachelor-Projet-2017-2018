@@ -56,7 +56,7 @@ window.addEventListener("DOMContentLoaded", function () {
     function TxType() {
         var option = select_tx.options[select_tx.selectedIndex].value;
 
-        document.querySelector('input[type="submit"]').removeAttribute('disabled');
+        document.querySelector('#form_tx > form > input[type="submit"]').removeAttribute('disabled');
 
         for (var i = 0; i < fields.length; i += 1) {
             if (fields[i].dataset.tx.indexOf(option) !== -1) {

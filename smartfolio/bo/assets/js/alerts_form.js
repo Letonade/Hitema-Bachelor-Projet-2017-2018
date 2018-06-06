@@ -9,9 +9,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     // VARS
     var fields = document.querySelectorAll('#alerts_fields > *'),
-    select_alerts = document.querySelector('select[name="alerts_type"]'),
-    pair_input = document.querySelector('input[name="alerts_pair_id"]'),
-    fee_type_opts = document.querySelectorAll('select[name="alerts_fee_type"] > option');
+    select_alerts = document.querySelector('select[name="alerts_type"]');
 
     // IF $_POST
     alertsType();
@@ -22,7 +20,7 @@ window.addEventListener("DOMContentLoaded", function () {
     function alertsType() {
         var option = select_alerts.options[select_alerts.selectedIndex].value;
 
-        document.querySelector('input[type="submit"]').removeAttribute('disabled');
+        document.querySelector('#form_alerts > form > input[type="submit"]').removeAttribute('disabled');
 
         for (var i = 0; i < fields.length; i += 1) {
             console.log("passage "+i);
