@@ -396,6 +396,36 @@ class Portfolio
         }
         return self::ReturnObjectsArray($folios);
     }
+
+    // ADD NEW ALERT
+    public function Newalert(array $infos)
+    {
+            // Data validation
+            $validation     = [
+                "Valeur vide"                  => empty($infos['alerts_value']),
+                "Comparateur vide"             => empty($infos['alerts_comparator']),
+                "Type d'alerte introuvable"    => empty($infos['alerts_type']),
+                "montant incorrect"            => !is_numeric($infos['alerts_value']),
+                "le montant doit être positif" => floatval($infos['alerts_value']) <= 0
+            ];
+            if (in_array(true, $validation)) {
+                return [false, array_search(true, $validation)];
+            }
+            // Save
+            $new_alert = App::$db->prepare("INSERT INTO 
+                `alerts` (`user_id`, `acc_port_id`, `acc_curr_id`, `alerts_value`, `alerts_compare`, `alerts_type`) 
+                VALUES (:user_id, :acc_port_id, :acc_curr_id, :alerts_value, :alerts_comparator, :alerts_type);");
+            debug($this->infos);
+            $new_alert->execute(array(
+                "user_id"                       => $infos['user_id'],
+                "acc_port_id"                   => $infos['acc_port_id'],
+                "acc_curr_id"                   => $infos['acc_curr_id'],
+                "alerts_value"                  => $infos['alerts_value'],
+                "alerts_comparator"             => $infos['alerts_comparator'],
+                "alerts_type"                   => $infos['alerts_type']       
+            ));
+            return $new_alert ? array(true) : array(false, 'erreur');
+    }
 }
 
 

@@ -23,12 +23,12 @@ window.addEventListener("DOMContentLoaded", function () {
         document.querySelector('#form_alerts > form > input[type="submit"]').removeAttribute('disabled');
 
         for (var i = 0; i < fields.length; i += 1) {
-            console.log("passage "+i);
+            //console.log("passage "+i);
             if (fields[i].dataset.alerts.indexOf(option) !== -1) {
-                console.log(fields[i]+" remove hidden")
+                //console.log(fields[i]+" remove hidden")
                 fields[i].classList.remove('hidden');
             } else {
-                console.log(fields[i]+" add hidden")
+                //console.log(fields[i]+" add hidden")
                 fields[i].classList.add('hidden');
             }
         }

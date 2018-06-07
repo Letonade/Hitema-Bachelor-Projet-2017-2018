@@ -218,6 +218,64 @@
             #alert_list {
                 width: 100%;
                 flex-grow: 1;
+    
+                .alerts {
+                    width: 100%;
+                    height: auto;
+                    margin: 10px 0;
+                    padding: 3px;
+                    box-sizing: border-box;
+                    border-radius: 3px;
+                    background: rgba(255, 255, 255, 0.1);
+                    display: flex;
+                    flex-flow: row wrap;
+                    justify-content: space-around;
+    
+                    i {
+                        color: $blue;
+                    }
+    
+                    &.buy i {
+                        color: lightgreen;
+                    }
+    
+                    &.sell i {
+                        color: tomato;
+                    }
+    
+                    > p {
+                        width: 100%;
+                        padding: 5px;
+                        border-bottom: 1px solid lightgrey;
+                    }
+    
+                    .alerts_part {
+                        width: 27.5%;
+                        display: flex;
+                        flex-flow: column nowrap;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-top: 7.5px;
+    
+                        h4 {
+                            font-size: 0.9rem;
+                        }
+    
+                        p {
+                            font-size: 0.8rem;
+                        }
+                    }
+    
+                    h6 {
+                        width: 100%;
+                        margin-top: 2px;
+                        padding-top: 2px;
+                        border-top: 1px solid grey;
+                        text-align: center;
+                        font-size: 0.8rem;
+                        font-weight: lighter;
+                    }
+                }
             }
         }
     }
@@ -230,13 +288,13 @@
         display: flex;
         flex-flow: column nowrap;
 
-        #tx_list, #alerts_list {
+        #tx_list {
             flex-grow: 1;
             overflow-y: scroll;
             padding: 0 10px;
             box-sizing: border-box;
 
-            .tx, .alerts {
+            .tx {
                 width: 100%;
                 height: auto;
                 margin: 10px 0;
@@ -266,7 +324,7 @@
                     border-bottom: 1px solid lightgrey;
                 }
 
-                .tx_part, .alerts_part {
+                .tx_part {
                     width: 27.5%;
                     display: flex;
                     flex-flow: column nowrap;

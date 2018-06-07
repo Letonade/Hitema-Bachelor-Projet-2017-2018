@@ -8,6 +8,8 @@ try {
 } catch (\Exception $e) {
     App::Respond('Portefeuille', $e->getMessage(), true);
 }
+debug($_POST);
+debug("new alerts ? ".isset($_POST['new_alerts']).", new tx ? ".isset($_POST['new_tx']));
 
 if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
     // ADD TX
@@ -29,16 +31,15 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
             'Nouvelle transaction',
             $new_tx[0] ? null : $new_tx[1]
         );
-        if ($new_tx[0] && $new_alerts[0]) {
+        if ($new_tx[0]) {
             unset($_POST);
         }
     }
     if (isset($_POST['new_alerts'])) {
-        $new_alerts = $portfolio->Newalerts([
+        $new_alert = $portfolio->Newalert([
             'user_id'               => $portfolio->agent->infos['id'],
             'acc_port_id'           => $portfolio->infos['id'],
             'acc_curr_id'           => $investment->currency->infos['id'],
-            'investment_type'       => $investment->infos['type'],
             'alerts_value'          => $_POST['alerts_value'],
             'alerts_comparator'     => $_POST['alerts_comparator'],
             'alerts_type'           => $_POST['alerts_type']
@@ -46,9 +47,9 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
         ]);
         App::Respond(
             'Nouvelle alerte',
-            $new_alerts[0] ? null : $new_alerts[1]
+            $new_alert[0] ? null : $new_alert[1]
         );
-        if ($new_tx[0] && $new_alerts[0]) {
+        if ($new_alert[0]) {
             unset($_POST);
         }
     }
@@ -167,8 +168,6 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
             <!-- Comparateur -->
             <label class="hidden" data-alerts='["marge", "fixe"]' for="alerts_comparator">Comparateur :</label>
             <select name="alerts_comparator" class="hidden input_prefix" data-alerts='["marge", "fixe"]' id="alerts_comparator">
-                <option hidden>--- Choix ---</option>
-                <option value="==" <?php echo ($_POST['alerts_comparator'] ?? '') == '"=="' ? 'selected' : ''; ?>>==</option>
                 <option value=">=" <?php echo ($_POST['alerts_comparator'] ?? '') == '">="' ? 'selected' : ''; ?>>>=</option>
                 <option value=">"  <?php echo ($_POST['alerts_comparator'] ?? '') == '">" ' ? 'selected' : ''; ?>>></option>
                 <option value="<=" <?php echo ($_POST['alerts_comparator'] ?? '') == '"<="' ? 'selected' : ''; ?>><=</option>
@@ -183,6 +182,7 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
                 </div>
             </div>
             <!-- Submit info -->
+            <input type="hidden" name="token" value="<?php echo $_SESSION['user']['session_token']; ?>">
             <input type="submit" name="new_alerts" value="Nouvelle alerte" <?php echo isset($_POST['alerts_type']) ? '' : 'disabled'; ?>>
         </form>
     </div>
@@ -228,15 +228,14 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
                     <h3><i class="fas fa-bell"></i> Alertes</h3>
                     <button type="button" name="button"><i class="fas fa-plus-circle">+</i></button>
                 </div>
-                <div id="alert_list"><!--insérer la liste ici--><h3>
-
-                <div class="tx_part">;
-                <h4>POLOP</h4>;
-                <p class="">pimp</p>;
-                </div>';
-
-
-                Affichage</h3></div>
+                <div id="alert_list"><!--insérer la liste ici-->   
+                <h3>Gain > 100%</h3>
+                <p class="actions">
+                    <button type="button" name="button" >
+                        <i class="far fa-times-circle">SUPPRIMER</i>
+                    </button>
+                </p>
+                </div>
             </div>
         </div>
         <!-- HISTORY -->

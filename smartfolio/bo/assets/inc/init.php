@@ -1,5 +1,11 @@
 <?php
 
+function debug($deb){
+	$out = $deb;
+	if (is_array($out)) {
+		$out = implode(',', $out);}
+	echo "<script>console.log('debugPHP :".$out."');</script>";
+}
 // PARAMS & DB
 include 'parameters.php';
 include '../assets/php/db_con.php';
