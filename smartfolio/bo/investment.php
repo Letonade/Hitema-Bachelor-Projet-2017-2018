@@ -1,6 +1,8 @@
 <?php
 include 'assets/inc/init.php';
 // GET PORTFOLIO
+debug("ci-dessous le post");
+debug($_POST);
 try {
     $portfolio = new Portfolio($_GET['port']);
     $investment = Investment::Investment($portfolio->infos['id'], $_GET['inv']);
@@ -36,20 +38,31 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
         }
     }
     if (isset($_POST['new_alerts'])) {
-        $new_alert = $portfolio->Newalert([
+        $new_alert = $portfolio->NewAlert([
             'user_id'               => $portfolio->agent->infos['id'],
             'acc_port_id'           => $portfolio->infos['id'],
             'acc_curr_id'           => $investment->currency->infos['id'],
             'alerts_value'          => $_POST['alerts_value'],
             'alerts_comparator'     => $_POST['alerts_comparator'],
             'alerts_type'           => $_POST['alerts_type']
-
         ]);
         App::Respond(
             'Nouvelle alerte',
             $new_alert[0] ? null : $new_alert[1]
         );
         if ($new_alert[0]) {
+            unset($_POST);
+        }
+    }
+    if (isset($_POST['delete_alerts'])) {
+        $delete_alert = $portfolio->DeleteAlert([
+            'alerts_id'             => $_POST['alert_id_suppr']
+        ]);
+        App::Respond(
+            'Suppréssion d\'alerte',
+            $delete_alert[0] ? null : $delete_alert[1]
+        );
+        if ($delete_alert[0]) {
             unset($_POST);
         }
     }
@@ -229,12 +242,11 @@ if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
                     <button type="button" name="button"><i class="fas fa-plus-circle">+</i></button>
                 </div>
                 <div id="alert_list"><!--insérer la liste ici-->   
-                <h3>Gain > 100%</h3>
-                <p class="actions">
-                    <button type="button" name="button" >
-                        <i class="far fa-times-circle">SUPPRIMER</i>
-                    </button>
-                </p>
+                <?php
+                foreach (array_reverse($investment->GetAlerts($portfolio->infos['id'],$_GET['inv'],$portfolio->agent->infos['id'])) as $alerts) {
+                    echo $alerts->SumUp();
+                }
+                ?>
                 </div>
             </div>
         </div>

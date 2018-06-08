@@ -398,7 +398,7 @@ class Portfolio
     }
 
     // ADD NEW ALERT
-    public function Newalert(array $infos)
+    public function NewAlert(array $infos)
     {
             // Data validation
             $validation     = [
@@ -425,6 +425,24 @@ class Portfolio
                 "alerts_type"                   => $infos['alerts_type']       
             ));
             return $new_alert ? array(true) : array(false, 'erreur');
+    }
+        // ADD NEW ALERT
+    public function DeleteAlert(array $infos)
+    {
+            // Data validation
+            $validation     = [
+                "Identifiant vide"             => empty($infos['alerts_id'])
+            ];
+            if (in_array(true, $validation)) {
+                return [false, array_search(true, $validation)];
+            }
+            // Save
+            $Delete_alert = App::$db->prepare("DELETE FROM `alerts` WHERE `alerts`.`alerts_id` = :alerts_id ;");
+            debug($this->infos);
+            $Delete_alert->execute(array(
+                "alerts_id"                       => $infos['alerts_id']     
+            ));
+            return $Delete_alert ? array(true) : array(false, 'erreur');
     }
 }
 

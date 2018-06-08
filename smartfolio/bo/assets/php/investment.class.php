@@ -10,13 +10,14 @@ class Investment
     public $portfolio;
     public $currency;
     public $type;
-    private $tx_history   = [];
-    private $balance      = 0;
-    private $last_pair    = false;
-    private $avg_delta    = false;
-    private $delta        = [];
-    private $temp_balance = [];
-    private $delta_arr    = [];
+    private $alert_history = [];
+    private $tx_history    = [];
+    private $balance       = 0;
+    private $last_pair     = false;
+    private $avg_delta     = false;
+    private $delta         = [];
+    private $temp_balance  = [];
+    private $delta_arr     = [];
 
     private function __construct(int $portfolio, int $currency, string $type)
     {
@@ -300,6 +301,26 @@ class Investment
         ]);
         $investment_type = $is_accumulator->fetch(PDO::FETCH_ASSOC)['COUNT(*)'] == 0 ? 'investment' : 'accumulator';
         return new self($portfolio_id, $currency_id, $investment_type);
+    }
+
+    // GET THE LIST OF ALERTS
+    public function GetAlerts(int $portfolio_id, int $currency_id, int $user_id)
+    {
+        if (empty($this->alert_history)) {
+            $this->alert_list = App::$db->prepare(
+                'SELECT * FROM `alerts` WHERE `acc_port_id` = :acc_port_id AND `acc_curr_id` = :acc_curr_id AND `user_id` = :user_id'
+            );
+            $this->alert_list->execute([
+                'acc_port_id' => $portfolio_id,
+                'acc_curr_id' => $currency_id,
+                'user_id'     => $user_id
+            ]);
+            foreach ($this->alert_list->fetchAll(PDO::FETCH_ASSOC) as $alert) {
+                $alert = new Alert($alert);
+                $this->alert_history[] = $alert;
+            }
+        }
+        return $this->alert_history;
     }
 }
 
