@@ -303,7 +303,7 @@ class Investment
         return new self($portfolio_id, $currency_id, $investment_type);
     }
 
-    // GET THE LIST OF ALERTS
+    // GET THE LIST OF ALERTS FOR THE CURRENT INVESTMENT
     public function GetAlerts(int $portfolio_id, int $currency_id, int $user_id)
     {
         if (empty($this->alert_history)) {
@@ -320,7 +320,7 @@ class Investment
                 $this->alert_history[] = $alert;
             }
         }
-        return $this->alert_history;
+    return $this->alert_history;
     }
 }
 

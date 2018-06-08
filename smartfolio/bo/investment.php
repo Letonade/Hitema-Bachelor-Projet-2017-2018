@@ -1,8 +1,6 @@
 <?php
 include 'assets/inc/init.php';
 // GET PORTFOLIO
-debug("ci-dessous le post");
-debug($_POST);
 try {
     $portfolio = new Portfolio($_GET['port']);
     $investment = Investment::Investment($portfolio->infos['id'], $_GET['inv']);
@@ -10,8 +8,6 @@ try {
 } catch (\Exception $e) {
     App::Respond('Portefeuille', $e->getMessage(), true);
 }
-debug($_POST);
-debug("new alerts ? ".isset($_POST['new_alerts']).", new tx ? ".isset($_POST['new_tx']));
 
 if (isset($_POST['token']) && User::CheckToken($_POST['token'])) {
     // ADD TX

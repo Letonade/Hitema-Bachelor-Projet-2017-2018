@@ -440,9 +440,27 @@ class Portfolio
             $Delete_alert = App::$db->prepare("DELETE FROM `alerts` WHERE `alerts`.`alerts_id` = :alerts_id ;");
             debug($this->infos);
             $Delete_alert->execute(array(
-                "alerts_id"                       => $infos['alerts_id']     
+                "alerts_id"                     => $infos['alerts_id']     
             ));
             return $Delete_alert ? array(true) : array(false, 'erreur');
+    }
+
+    // GET THE LIST OF ALERTS OF THE PORTFOLIO
+    public function GetAlerts(int $portfolio_id)
+    {
+        if (empty($this->alert_history)) {
+            $this->alert_list = App::$db->prepare(
+                'SELECT * FROM `alerts` WHERE `acc_port_id` = :acc_port_id'
+            );
+            $this->alert_list->execute([
+                'acc_port_id' => $portfolio_id
+            ]);
+            foreach ($this->alert_list->fetchAll(PDO::FETCH_ASSOC) as $alert) {
+                $alert = new Alert($alert);
+                $this->alert_history[] = $alert;
+            }
+        }
+    return $this->alert_history;
     }
 }
 
