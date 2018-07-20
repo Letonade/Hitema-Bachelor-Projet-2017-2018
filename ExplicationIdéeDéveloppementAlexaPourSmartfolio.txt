@@ -1,0 +1,15 @@
+Idée utilisation Alexa :
+
+Petit document pour vous donner plus d'informations sur mon idée d'amélioration de notre projet par Alexa si vous voulez qu'on en parle durant la soutenance.
+
+Tout d'abord Alexa est l'IA d'Amazon si vous ne le savez pas. Nous pouvons simplement créer un skill qui s'apparenterais à un module.
+Avec celui ci nous pourrions développer notre application et nous démarquer de la concurence avec un système que nos client ne trouveraient pas ailleur.
+Il pourrait leur énoncer la valeur de leur portefeuilles à tout instant avec la voie sans avoir besoin d'allumer un appareil en particulier, il suffit que
+leur Alexa soit branchée.
+
+Si nous avions eu un peu plus de temps nous aurions pu le développer et faire une démo lors de la soutenance qui aurait été impressionante.
+Je vais tout de même travailler sur un déploiement d'API, sachant que si je réussi dans un délais plutôt court, j'aurais peut être le temps de développer un skill
+qui pourrait déjà donner le montant d'un portefeuille.
+Cela ne figurera pas dans le document mais nous pourrions le présenter en plus à l'oral.
+
+Voilà pour cette idée !
